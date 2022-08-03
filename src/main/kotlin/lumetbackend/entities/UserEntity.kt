@@ -30,9 +30,6 @@ open class UserEntity {
     @Column(name = "email", nullable = false)
     open var email: String? = null
 
-    @Column(name = "emailtoken")
-    open var emailtoken: Int? = null
-
     @Column(name = "status", nullable = false, length = 10)
     open var status: String = "OFFLINE"
 
@@ -63,14 +60,19 @@ open class UserEntity {
     @Column(name = "friendlist")
     open var friendlist: Array<Int> = arrayOf()
 
-    @Type(type = "int-array")
-    @Column(name = "events")
-    open var events: Array<Int> = arrayOf()
-
     @Type(type = "string-array")
     @Column(name = "images")
     open var images: Array<String> = arrayOf()
 
+
+    @Type(type = "int-array")
+    @Column(name = "events_participation_id")
+    open var eventsParticipationId: Array<Int> = arrayOf()
+
+
+    @Type(type = "int-array")
+    @Column(name = "events")
+    open var events: Array<Int> = arrayOf()
 
     constructor(login: String?, password: String?, email: String?) {
         this.login = login

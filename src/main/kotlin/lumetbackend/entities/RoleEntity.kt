@@ -13,4 +13,6 @@ open class RoleEntity {
 
     @Column(name = "name", nullable = false)
     open var name: String? = null
+
+
 }

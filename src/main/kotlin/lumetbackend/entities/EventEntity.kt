@@ -22,11 +22,11 @@ open class EventEntity {
     @Column(name = "id", nullable = false)
     open var id: Int? = null
 
-    @Column(name = "userid")
-    open var userid: Int? = null
-
     @Column(name = "userrating")
     open var userrating: Int? = null
+
+    @Column(name = "userid", nullable = false)
+    open var userid: Int? = null
 
     @Column(name = "name")
     open var name: String? = null
@@ -40,9 +40,6 @@ open class EventEntity {
     @Column(name = "avatarimage")
     open var avatarimage: String? = null
 
-    @Column(name = "privacystatus", nullable = false, length = 50)
-    open var privacystatus: String? = null
-
     @Column(name = "\"time\"")
     open var time: String? = null
 
@@ -52,13 +49,25 @@ open class EventEntity {
     @Column(name = "desiredage")
     open var desiredage: Int? = null
 
-    @Column(name = "participantsanonymity")
-    open var participantsanonymity: Int? = null
+    @Column(name = "participant_limit")
+    open var participantLimit: Int? = null
+
+    @Column(name = "participants_anonymity", nullable = false)
+    open var participantsAnonymity: String? = null
+
+    @Column(name = "privacy_status", nullable = false, length = 50)
+    open var privacyStatus: String? = null
+
+    @Column(name = "registration_settings", nullable = false)
+    open var registrationSettings: String? = null
 
     @Type(type = "int-array")
-    @Column(name = "participants")
-    open var participants: Array<Int> = arrayOf()
+    @Column(name = "confirmed_participants")
+    open var confirmedParticipants: Array<Int> = arrayOf()
 
+    @Type(type = "int-array")
+    @Column(name = "unconfirmed_participants")
+    open var unconfirmedParticipants: Array<Int> = arrayOf()
 }
 
 
