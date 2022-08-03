@@ -1,4 +1,4 @@
-package lumetbackend.service.emailservice
+package lumetbackend.service.emailService
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.SimpleMailMessage

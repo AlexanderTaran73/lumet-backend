@@ -1,9 +1,13 @@
-package lumetbackend.service
+package lumetbackend.service.databaseService
 
 import lumetbackend.entities.EventEntity
 import lumetbackend.repositories.EventRepository
+import org.springframework.stereotype.Service
 import java.util.*
+import javax.transaction.Transactional
 
+@Service
+@Transactional
 class EventServiceImpl(private val eventRepository: EventRepository): EventService {
     override fun findById(id: Int): Optional<EventEntity> {
         return eventRepository.findById(id)

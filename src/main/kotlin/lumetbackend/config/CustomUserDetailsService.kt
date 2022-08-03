@@ -1,6 +1,6 @@
 package lumetbackend.config
 
-import lumetbackend.service.UserService
+import lumetbackend.service.databaseService.UserService
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Component
 

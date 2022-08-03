@@ -1,4 +1,4 @@
-package lumetbackend.service
+package lumetbackend.service.databaseService
 
 import lumetbackend.entities.EventEntity
 import java.util.*

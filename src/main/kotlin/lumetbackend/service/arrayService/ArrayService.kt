@@ -1,4 +1,4 @@
-package lumetbackend.service
+package lumetbackend.service.arrayService
 
 import org.springframework.stereotype.Service
 

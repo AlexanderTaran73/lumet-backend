@@ -17,6 +17,7 @@ class UserDTO(
 class PrivateUserDTO(
         var id: Int?,
         var login: String?,
+        var email: String?,
         var status: String?,
         var privacystatus: String?,
         var age: Int?,

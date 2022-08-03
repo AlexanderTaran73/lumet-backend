@@ -1,4 +1,4 @@
-package lumetbackend.service
+package lumetbackend.service.databaseService
 
 import lumetbackend.entities.RegistrationDataEntity
 import lumetbackend.repositories.RegistrationDataRepository
@@ -8,7 +8,7 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class RegistrationDataServiceImpl(private val registrationDataRepository: RegistrationDataRepository):RegistrationDataService {
+class RegistrationDataServiceImpl(private val registrationDataRepository: RegistrationDataRepository): RegistrationDataService {
     override fun findAll(): List<RegistrationDataEntity> {
         return registrationDataRepository.findAll()
     }

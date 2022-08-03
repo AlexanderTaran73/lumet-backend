@@ -52,6 +52,8 @@ open class UserEntity {
     @JoinColumn(name = "roleid", nullable = false)
     open var roleid: RoleEntity? = null
 
+
+
     @Type(type = "int-array")
     @Column(name = "blacklist")
     open var blacklist: Array<Int> = arrayOf()
