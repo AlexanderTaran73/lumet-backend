@@ -2,19 +2,23 @@ package lumetbackend.service.requestServices
 
 import lumetbackend.config.jwt.JwtFilter
 import lumetbackend.config.jwt.JwtProvider
+import lumetbackend.controller.imagecontroller.service.FileService
 import lumetbackend.entities.DTO.PrivateUserDTO
 import lumetbackend.entities.UserEntity
 import lumetbackend.service.arrayService.ArrayService
 import lumetbackend.service.databaseService.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
 @Service
-class UserChangesService(private val jwtProvider: JwtProvider, private val userService: UserService, private val arrayService: ArrayService) {
+class UserChangesService(private val jwtProvider: JwtProvider, private val userService: UserService, private val arrayService: ArrayService, private val passwordEncoder : PasswordEncoder, private val fileService: FileService) {
 
     fun changeLogin(request: HttpServletRequest, stringRequest: String): ResponseEntity<Any> {
         val userEntity = getUserByRequest(request)
@@ -27,10 +31,17 @@ class UserChangesService(private val jwtProvider: JwtProvider, private val userS
         return ResponseEntity(HttpStatus.NOT_FOUND)
     }
 
-//    @PostMapping("/change_password")
-//    fun changePassword(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return ResponseEntity(HttpStatus.FORBIDDEN)
-//    }
+
+    fun changePassword(request: HttpServletRequest, stringRequest: String): ResponseEntity<Any>{
+        val userEntity = getUserByRequest(request)
+        if(stringRequest.length<4) return ResponseEntity(HttpStatus.NOT_FOUND)
+        if (userEntity != null) {
+            userEntity.password = stringRequest
+            userService.save(userEntity)
+            return ResponseEntity(UserToUserDTO(userEntity), HttpStatus.OK)
+        }
+        return ResponseEntity(HttpStatus.NOT_FOUND)
+    }
 //
 //    @PostMapping("/change_email")
 //    fun changeEmail(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
@@ -67,10 +78,15 @@ class UserChangesService(private val jwtProvider: JwtProvider, private val userS
         }
     }
 
-//    @PostMapping("/change_avatarimage")
-//    fun changeAvatarImage(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return ResponseEntity(HttpStatus.NOT_FOUND)
-//    }
+    fun changeAvatarImage(imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any>{
+        val userEntity = getUserByRequest(request)
+        if (userEntity!=null){
+            val fileName = fileService.saveImage(imageFile)
+            userEntity.avatarimage = fileName
+            userService.save(userEntity)
+            return ResponseEntity(UserToUserDTO(userEntity), HttpStatus.OK)
+        }else return ResponseEntity(HttpStatus.NOT_FOUND)
+    }
 
 
     fun changeHobbyType(request: HttpServletRequest, stringRequest: String): ResponseEntity<Any> {
@@ -144,14 +160,25 @@ class UserChangesService(private val jwtProvider: JwtProvider, private val userS
     }
 
 
-//    @PostMapping("/add_to_images")
-//    fun AddToImages(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return ResponseEntity(HttpStatus.FORBIDDEN)
-//    }
-//    @PostMapping("/delete_frome_images")
-//    fun DeleteFromeImages(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return ResponseEntity(HttpStatus.FORBIDDEN)
-//    }
+
+    fun AddToImages(imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any>{
+        val userEntity = getUserByRequest(request)
+        if (userEntity!=null){
+            val fileName = fileService.saveImage(imageFile)
+            userEntity.images = arrayService.appendString(userEntity.images, fileName)
+            userService.save(userEntity)
+            return ResponseEntity(UserToUserDTO(userEntity), HttpStatus.OK)
+        }else return ResponseEntity(HttpStatus.NOT_FOUND)
+    }
+
+    fun DeleteFromeImages(request: HttpServletRequest, stringRequest: String): ResponseEntity<Any>{
+        val userEntity = getUserByRequest(request)
+        if (userEntity!=null){
+            userEntity.images = arrayService.removeString(userEntity.images, stringRequest)
+            userService.save(userEntity)
+            return ResponseEntity(UserToUserDTO(userEntity), HttpStatus.OK)
+        }else return ResponseEntity(HttpStatus.NOT_FOUND)
+    }
 
 
 //    @PostMapping("/add_to_events_participation")

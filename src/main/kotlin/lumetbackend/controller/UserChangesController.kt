@@ -10,10 +10,8 @@ import lumetbackend.service.requestServices.UserChangesService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.util.StringUtils
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
@@ -27,10 +25,10 @@ class UserChangesController(private val userChangesService: UserChangesService) 
         return userChangesService.changeLogin(request, stringRequest)
     }
 
-//    @PostMapping("/change_password")
-//    fun changePassword(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return ResponseEntity(HttpStatus.FORBIDDEN)
-//    }
+    @PostMapping("/change_password")
+    fun changePassword(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+        return userChangesService.changePassword(request, stringRequest)
+    }
 //
 //    @PostMapping("/change_email")
 //    fun changeEmail(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
@@ -47,10 +45,10 @@ class UserChangesController(private val userChangesService: UserChangesService) 
         return userChangesService.changeAge(request, stringRequest)
     }
 
-//    @PostMapping("/change_avatarimage")
-//    fun changeAvatarImage(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return ResponseEntity(HttpStatus.NOT_FOUND)
-//    }
+    @PostMapping("/change_avatarimage")
+    fun changeAvatarImage(@RequestParam("imageFile") imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any>{
+        return userChangesService.changeAvatarImage(imageFile, request)
+    }
 
     @PostMapping("/change_hobbytype")
     fun changeHobbyType(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
@@ -78,14 +76,14 @@ class UserChangesController(private val userChangesService: UserChangesService) 
     }
 
 
-//    @PostMapping("/add_to_images")
-//    fun AddToImages(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return ResponseEntity(HttpStatus.FORBIDDEN)
-//    }
-//    @PostMapping("/delete_frome_images")
-//    fun DeleteFromeImages(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return ResponseEntity(HttpStatus.FORBIDDEN)
-//    }
+    @PostMapping("/add_to_images")
+    fun AddToImages(@RequestParam("imageFile") imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any>{
+        return userChangesService.AddToImages(imageFile, request)
+    }
+    @PostMapping("/delete_frome_images")
+    fun DeleteFromeImages(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+        return userChangesService.DeleteFromeImages(request, stringRequest)
+    }
 
 
 //    @PostMapping("/add_to_events_participation")

@@ -15,33 +15,20 @@ import lumetbackend.controller.imagecontroller.service.FileService
 import javax.servlet.http.HttpServletRequest
 
 
-/**
- * Created by Abhishek Saxena on 11-11-2021.
- */
-
-@RestController
-@RequestMapping("/images")
-class FileController(
-    private val fileService: FileService
-) {
-
-    @PostMapping
-    fun uploadImage(
-        @RequestParam("imageFile") imageFile: MultipartFile,
-        request: HttpServletRequest
-    ): ResponseEntity<String> {
-        val fileName = fileService.saveImage(imageFile)
-        val body = getFileAccessUrl(request.requestURL, fileName)
-        return ResponseEntity(body, HttpStatus.CREATED)
-    }
-
-    private fun getFileAccessUrl(requestURL: StringBuffer?, fileName: String): String {
-        val baseUrl = requestURL ?: Exception("Invalid requestURL")
-        return "${baseUrl}/$fileName"
-    }
-
-    @GetMapping("/{fileName}", produces = [MediaType.IMAGE_JPEG_VALUE])
-    fun getImage(@PathVariable fileName: String): FileSystemResource {
-        return fileService.getImage(fileName)
-    }
-}
+//@RestController
+//@RequestMapping("/images")
+//class FileController(private val fileService: FileService) {
+//
+//    @PostMapping
+//    fun uploadImage(@RequestParam("imageFile") imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<String> {
+//        val fileName = fileService.saveImage(imageFile)
+//        val body = getFileAccessUrl(request.requestURL, fileName)
+//        return ResponseEntity(body, HttpStatus.CREATED)
+//    }
+//
+//    private fun getFileAccessUrl(requestURL: StringBuffer?, fileName: String): String {
+//        val baseUrl = requestURL ?: Exception("Invalid requestURL")
+//        return "${baseUrl}/$fileName"
+//    }
+//
+//}
