@@ -1,4 +1,4 @@
-package lumetbackend.controller.imagecontroller.jackson
+package lumetbackend.service.imageservice.jackson
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.JsonSerializer

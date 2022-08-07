@@ -5,8 +5,10 @@ import lumetbackend.config.jwt.JwtProvider
 import lumetbackend.entities.DTO.PrivateUserDTO
 import lumetbackend.entities.DTO.UserBlacklistDTO
 import lumetbackend.entities.DTO.UserDTO
+import lumetbackend.entities.EventEntity
 import lumetbackend.entities.UserEntity
 import lumetbackend.service.arrayService.ArrayService
+import lumetbackend.service.databaseService.EventService
 import lumetbackend.service.databaseService.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,7 +18,7 @@ import java.util.NoSuchElementException
 import javax.servlet.http.HttpServletRequest
 
 @Service
-class UsersService(private val jwtProvider: JwtProvider, private val userService: UserService, private val arrayService: ArrayService) {
+class UsersService(private val jwtProvider: JwtProvider, private val userService: UserService, private val arrayService: ArrayService, private val eventService: EventService) {
 
     fun getUser(request: HttpServletRequest): ResponseEntity<Any> {
         val userEntity = getUserByRequest(request) ?: return ResponseEntity(HttpStatus.NOT_FOUND)
@@ -82,6 +84,26 @@ class UsersService(private val jwtProvider: JwtProvider, private val userService
             ResponseEntity(userDTO, HttpStatus.OK)
         }else ResponseEntity(HttpStatus.NOT_FOUND)
     }
+
+    fun getUserEvents(request: HttpServletRequest): ResponseEntity<Any>{
+        val userEntity = getUserByRequest(request)
+        if(userEntity!=null) {
+            var userEventsList = userEntity.events
+            val events = mutableListOf<EventEntity>()
+            for (id in userEntity.events){
+                try {
+                    val event = eventService.findById(id).get()
+                    events.add(event)
+                } catch (_: NoSuchElementException) {
+                    userEventsList = arrayService.removeInt(userEventsList, id)
+                }
+            }
+            userEntity.events = userEventsList
+            userService.save(userEntity)
+            return ResponseEntity(events, HttpStatus.OK)
+        }else return ResponseEntity(HttpStatus.NOT_FOUND)
+    }
+
 
     fun getUserByRequest(request: HttpServletRequest): UserEntity?{
         val bearer = request.getHeader(JwtFilter.AUTHORIZATION)

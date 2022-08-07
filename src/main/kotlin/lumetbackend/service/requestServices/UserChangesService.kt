@@ -2,7 +2,7 @@ package lumetbackend.service.requestServices
 
 import lumetbackend.config.jwt.JwtFilter
 import lumetbackend.config.jwt.JwtProvider
-import lumetbackend.controller.imagecontroller.service.FileService
+import lumetbackend.service.imageservice.service.FileService
 import lumetbackend.entities.DTO.PrivateUserDTO
 import lumetbackend.entities.UserEntity
 import lumetbackend.service.arrayService.ArrayService
@@ -12,10 +12,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletRequest
-import javax.validation.Valid
 
 @Service
 class UserChangesService(private val jwtProvider: JwtProvider, private val userService: UserService, private val arrayService: ArrayService, private val passwordEncoder : PasswordEncoder, private val fileService: FileService) {

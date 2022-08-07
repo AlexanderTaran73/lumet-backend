@@ -78,6 +78,7 @@ class UserChangesController(private val userChangesService: UserChangesService) 
 
     @PostMapping("/add_to_images")
     fun AddToImages(@RequestParam("imageFile") imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any>{
+        if (imageFile==null)return ResponseEntity(HttpStatus.LOCKED)
         return userChangesService.AddToImages(imageFile, request)
     }
     @PostMapping("/delete_frome_images")
