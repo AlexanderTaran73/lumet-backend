@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar backend/target/lumetbackend-0.0.1-SNAPSHOT.jar
+web: java -Dserver.port=$PORT -jar target/lumetbackend-0.0.1-SNAPSHOT.jar
