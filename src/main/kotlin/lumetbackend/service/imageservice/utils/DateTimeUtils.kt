@@ -1,4 +1,4 @@
-package lumetbackend.controller.imagecontroller.utils
+package lumetbackend.service.imageservice.utils
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

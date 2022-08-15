@@ -1,4 +1,4 @@
-package lumetbackend.controller.imagecontroller.web.exception
+package lumetbackend.service.imageservice.web.exception
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

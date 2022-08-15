@@ -1,4 +1,4 @@
-package lumetbackend.controller.imagecontroller.service
+package lumetbackend.service.imageservice.service
 
 import org.springframework.core.io.FileSystemResource
 import org.springframework.web.multipart.MultipartFile

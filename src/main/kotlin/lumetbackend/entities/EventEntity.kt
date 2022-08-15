@@ -68,6 +68,21 @@ open class EventEntity {
     @Type(type = "int-array")
     @Column(name = "unconfirmed_participants")
     open var unconfirmedParticipants: Array<Int> = arrayOf()
+
+    constructor(userrating: Int?, userid: Int?, name: String?, description: String?, hobbytype: String?, time: String?, coordinates: String?, desiredage: Int?, participantLimit: Int?, participantsAnonymity: String?, privacyStatus: String?, registrationSettings: String?) {
+        this.userrating = userrating
+        this.userid = userid
+        this.name = name
+        this.description = description
+        this.hobbytype = hobbytype
+        this.time = time
+        this.coordinates = coordinates
+        this.desiredage = desiredage
+        this.participantLimit = participantLimit
+        this.participantsAnonymity = participantsAnonymity
+        this.privacyStatus = privacyStatus
+        this.registrationSettings = registrationSettings
+    }
 }
 
 

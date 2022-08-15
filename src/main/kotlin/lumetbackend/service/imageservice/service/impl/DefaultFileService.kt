@@ -1,12 +1,12 @@
-package lumetbackend.controller.imagecontroller.service.impl
+package lumetbackend.service.imageservice.service.impl
 
 import org.springframework.core.io.FileSystemResource
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import lumetbackend.controller.imagecontroller.service.FileService
-import lumetbackend.controller.imagecontroller.utils.formatFileName
-import lumetbackend.controller.imagecontroller.utils.getCurrentTimestamp
-import lumetbackend.controller.imagecontroller.utils.getFileNameAndExtension
+import lumetbackend.service.imageservice.service.FileService
+import lumetbackend.service.imageservice.utils.formatFileName
+import lumetbackend.service.imageservice.utils.getCurrentTimestamp
+import lumetbackend.service.imageservice.utils.getFileNameAndExtension
 import java.io.File
 import java.io.FileNotFoundException
 import java.nio.file.Files

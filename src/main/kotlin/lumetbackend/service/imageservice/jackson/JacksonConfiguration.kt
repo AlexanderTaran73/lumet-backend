@@ -1,4 +1,4 @@
-package lumetbackend.controller.imagecontroller.jackson
+package lumetbackend.service.imageservice.jackson
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.springframework.context.annotation.Bean
@@ -15,8 +15,8 @@ class JacksonConfiguration {
 
     @Bean
     fun javaTimeModule(
-        localDateTimeSerializer: LocalDateTimeSerializer,
-        localDateTimeDeserializer: LocalDateTimeDeserializer
+            localDateTimeSerializer: LocalDateTimeSerializer,
+            localDateTimeDeserializer: LocalDateTimeDeserializer
     ): JavaTimeModule = JavaTimeModule().apply {
         addSerializer(LocalDateTime::class.java, localDateTimeSerializer)
         addDeserializer(LocalDateTime::class.java, localDateTimeDeserializer)
