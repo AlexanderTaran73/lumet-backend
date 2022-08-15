@@ -17,4 +17,6 @@ interface UserService {
     fun deleteByEmail(email : String)
 
     fun save(userEntity: UserEntity)
+
+    fun firstsave(userEntity: UserEntity)
 }

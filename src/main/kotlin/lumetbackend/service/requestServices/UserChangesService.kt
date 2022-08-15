@@ -37,7 +37,7 @@ class UserChangesService(private val jwtProvider: JwtProvider, private val userS
         if(stringRequest.length<4) return ResponseEntity(HttpStatus.NOT_FOUND)
         if (userEntity != null) {
             userEntity.password = stringRequest
-            userService.save(userEntity)
+            userService.firstsave(userEntity)
             return ResponseEntity(UserToUserDTO(userEntity), HttpStatus.OK)
         }
         return ResponseEntity(HttpStatus.NOT_FOUND)

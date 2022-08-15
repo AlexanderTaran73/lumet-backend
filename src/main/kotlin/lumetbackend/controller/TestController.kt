@@ -18,11 +18,9 @@ class TestController(private val registrationDataService: RegistrationDataServic
     @GetMapping
     fun test():ResponseEntity<Any>{
 
-        for (i in 1..10) {
-            val userEntity = UserEntity("test", "test", i.toString())
-            userService.save(userEntity)
+        val userEntity = UserEntity("test", "test", "1")
+        userService.save(userEntity)
 
-        }
 
 
         return ResponseEntity(HttpStatus.OK)

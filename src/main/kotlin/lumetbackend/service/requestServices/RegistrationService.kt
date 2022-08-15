@@ -45,7 +45,7 @@ class RegistrationService(private val registrationDataService: RegistrationDataS
         if (registrationDataEntity==null) return ResponseEntity(HttpStatus.NOT_FOUND)
         if (registrationDataEntity.emailtoken!=emailtoken) return ResponseEntity((HttpStatus.valueOf("Invalid token")))
         val userEntity = UserEntity(registrationDataEntity.login, registrationDataEntity.password, registrationDataEntity.email)
-        userService.save(userEntity)
+        userService.firstsave(userEntity)
         registrationDataService.deleteByEmail(email)
         return ResponseEntity(jwtProvider.generateToken(userEntity.email), HttpStatus.CREATED)
     }

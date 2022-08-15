@@ -33,12 +33,14 @@ class UserServiceImpl(private val userRepository: UserRepository, private val ro
     }
 
     override fun save(userEntity: UserEntity) {
+        userRepository.save(userEntity)
+    }
+
+    override fun firstsave(userEntity: UserEntity) {
         userEntity.roleid = roleRepository.findByName("ROLE_USER")
         userEntity.password = passwordEncoder.encode(userEntity.password)
         userRepository.save(userEntity)
     }
-
-
     override fun findByEmailAndPassword(email: String, password: String): UserEntity? {
         val userEntity: UserEntity? = userRepository.findByEmail(email)
         if (userEntity != null) {
