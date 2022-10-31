@@ -22,7 +22,7 @@ import javax.validation.Valid
 class AuthorizationController(private val authorizationService: AuthorizationService) {
 
 
-    @GetMapping
+    @PostMapping
     fun Authorization(@Valid @RequestBody authorizationRequest: AuthorizationRequest): ResponseEntity<Any> {
         return authorizationService.Authorization(authorizationRequest)
     }

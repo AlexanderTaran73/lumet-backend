@@ -3,8 +3,10 @@ package lumetbackend.service.requestServices
 import lumetbackend.config.jwt.JwtProvider
 import lumetbackend.controller.EmailConfirmationRequest
 import lumetbackend.controller.RegistrationRequest
-import lumetbackend.entities.RegistrationDataEntity
-import lumetbackend.entities.UserEntity
+import lumetbackend.entities.*
+import lumetbackend.repositories.FriendsRepository
+import lumetbackend.repositories.UserEventRepository
+import lumetbackend.repositories.UserRatingRepository
 import lumetbackend.service.databaseService.RegistrationDataService
 import lumetbackend.service.databaseService.UserService
 import lumetbackend.service.emailService.EmailService
@@ -15,7 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody
 import javax.validation.Valid
 
 @Service
-class RegistrationService(private val registrationDataService: RegistrationDataService, private val userService: UserService, private val emailService: EmailService, private val jwtProvider: JwtProvider){
+class RegistrationService(private val registrationDataService: RegistrationDataService,
+                          private val userService: UserService,
+                          private val emailService: EmailService,
+                          private val jwtProvider: JwtProvider,
+                          private val friendsRepository: FriendsRepository,
+                          private val userRatingRepository: UserRatingRepository,
+                          private val userEventRepository: UserEventRepository){
 
     fun Registration(registrationRequest: RegistrationRequest): ResponseEntity<Any> {
         val login = registrationRequest.login
@@ -45,6 +53,19 @@ class RegistrationService(private val registrationDataService: RegistrationDataS
         if (registrationDataEntity==null) return ResponseEntity(HttpStatus.NOT_FOUND)
         if (registrationDataEntity.emailtoken!=emailtoken) return ResponseEntity((HttpStatus.valueOf("Invalid token")))
         val userEntity = UserEntity(registrationDataEntity.login, registrationDataEntity.password, registrationDataEntity.email)
+
+        val friends = Friends()
+        userService.friendsSave(friends)
+        userEntity.friendsid = friendsRepository.findById(friends.id!!).get()
+
+        val  userRating = UserRating(10, arrayOf(), arrayOf())
+        userService.userRatingSave(userRating)
+        userEntity.ratingid = userRatingRepository.findById(userRating.id!!).get()
+
+        val userEvent = UserEvent(arrayOf(), arrayOf(), arrayOf(), arrayOf())
+        userService.userEventSave(userEvent)
+        userEntity.userEvents = userEventRepository.findById(userEvent.id!!).get()
+
         userService.firstsave(userEntity)
         registrationDataService.deleteByEmail(email)
         return ResponseEntity(jwtProvider.generateToken(userEntity.email), HttpStatus.CREATED)

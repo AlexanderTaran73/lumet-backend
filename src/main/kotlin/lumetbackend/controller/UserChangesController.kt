@@ -20,71 +20,71 @@ import javax.validation.Valid
 @RequestMapping("/users/change_user")
 class UserChangesController(private val userChangesService: UserChangesService) {
 
-    @PostMapping("/change_login")
-    fun changeLogin(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any> {
-        return userChangesService.changeLogin(request, stringRequest)
-    }
-
-    @PostMapping("/change_password")
-    fun changePassword(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-        return userChangesService.changePassword(request, stringRequest)
-    }
-//
-//    @PostMapping("/change_email")
-//    fun changeEmail(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return ResponseEntity(HttpStatus.FORBIDDEN)
+//    @PostMapping("/change_login")
+//    fun changeLogin(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any> {
+//        return userChangesService.changeLogin(request, stringRequest)
 //    }
-
-    @PostMapping("/change_privacystatus")
-    fun changePrivacyStatus(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-        return userChangesService.changePrivacyStatus(request, stringRequest)
-    }
-
-    @PostMapping("/change_age")
-    fun changeAge(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-        return userChangesService.changeAge(request, stringRequest)
-    }
-
-    @PostMapping("/change_avatarimage")
-    fun changeAvatarImage(@RequestParam("imageFile") imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any>{
-        return userChangesService.changeAvatarImage(imageFile, request)
-    }
-
-    @PostMapping("/change_hobbytype")
-    fun changeHobbyType(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-        return userChangesService.changeHobbyType(request, stringRequest)
-    }
-
-
-    @PostMapping("/add_to_blacklist")
-    fun AddToBlacklist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-        return userChangesService.AddToBlacklist(request, stringRequest)
-    }
-    @PostMapping("/delete_frome_blacklist")
-    fun DeleteFromeBlacklist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-        return userChangesService.DeleteFromeBlacklist(request, stringRequest)
-    }
-
-
-    @PostMapping("/add_to_friendlist")
-    fun AddToFriendlist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-        return userChangesService.AddToFriendlist(request, stringRequest)
-    }
-    @PostMapping("/delete_frome_friendlist")
-    fun DeleteFromeFriendlist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-        return userChangesService.DeleteFromeFriendlist(request, stringRequest)
-    }
-
-
-    @PostMapping("/add_to_images")
-    fun AddToImages(@RequestParam("imageFile") imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any>{
-        if (imageFile==null)return ResponseEntity(HttpStatus.LOCKED)
-        return userChangesService.AddToImages(imageFile, request)
-    }
-    @PostMapping("/delete_frome_images")
-    fun DeleteFromeImages(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-        return userChangesService.DeleteFromeImages(request, stringRequest)
-    }
+//
+//    @PostMapping("/change_password")
+//    fun changePassword(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+//        return userChangesService.changePassword(request, stringRequest)
+//    }
+////
+////    @PostMapping("/change_email")
+////    fun changeEmail(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+////        return ResponseEntity(HttpStatus.FORBIDDEN)
+////    }
+//
+//    @PostMapping("/change_privacystatus")
+//    fun changePrivacyStatus(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+//        return userChangesService.changePrivacyStatus(request, stringRequest)
+//    }
+//
+//    @PostMapping("/change_age")
+//    fun changeAge(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+//        return userChangesService.changeAge(request, stringRequest)
+//    }
+//
+//    @PostMapping("/change_avatarimage")
+//    fun changeAvatarImage(@RequestParam("imageFile") imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any>{
+//        return userChangesService.changeAvatarImage(imageFile, request)
+//    }
+//
+//    @PostMapping("/change_hobbytype")
+//    fun changeHobbyType(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+//        return userChangesService.changeHobbyType(request, stringRequest)
+//    }
+//
+//
+//    @PostMapping("/add_to_blacklist")
+//    fun AddToBlacklist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+//        return userChangesService.AddToBlacklist(request, stringRequest)
+//    }
+//    @PostMapping("/delete_frome_blacklist")
+//    fun DeleteFromeBlacklist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+//        return userChangesService.DeleteFromeBlacklist(request, stringRequest)
+//    }
+//
+//
+//    @PostMapping("/add_to_friendlist")
+//    fun AddToFriendlist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+//        return userChangesService.AddToFriendlist(request, stringRequest)
+//    }
+//    @PostMapping("/delete_frome_friendlist")
+//    fun DeleteFromeFriendlist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+//        return userChangesService.DeleteFromeFriendlist(request, stringRequest)
+//    }
+//
+//
+//    @PostMapping("/add_to_images")
+//    fun AddToImages(@RequestParam("imageFile") imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any>{
+//        if (imageFile==null)return ResponseEntity(HttpStatus.LOCKED)
+//        return userChangesService.AddToImages(imageFile, request)
+//    }
+//    @PostMapping("/delete_frome_images")
+//    fun DeleteFromeImages(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+//        return userChangesService.DeleteFromeImages(request, stringRequest)
+//    }
 
 
 //    @PostMapping("/add_to_events_participation")

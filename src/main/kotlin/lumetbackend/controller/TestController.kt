@@ -18,12 +18,14 @@ class TestController(private val registrationDataService: RegistrationDataServic
     @GetMapping
     fun test():ResponseEntity<Any>{
 
-        val userEntity = UserEntity("test", "test", "1")
-        userService.save(userEntity)
+//        val userEntity = UserEntity("test", "test", "1")
+//        userService.save(userEntity)
+        val users = userService.findAll()
+        println(users[0].friendsid?.id)
 
 
 
-        return ResponseEntity(HttpStatus.OK)
+        return ResponseEntity(users, HttpStatus.OK)
     }
 
 }

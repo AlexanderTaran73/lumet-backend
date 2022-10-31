@@ -1,6 +1,9 @@
 package lumetbackend.service.databaseService
 
+import lumetbackend.entities.Friends
 import lumetbackend.entities.UserEntity
+import lumetbackend.entities.UserEvent
+import lumetbackend.entities.UserRating
 import java.util.*
 
 interface UserService {
@@ -19,4 +22,8 @@ interface UserService {
     fun save(userEntity: UserEntity)
 
     fun firstsave(userEntity: UserEntity)
+
+    fun friendsSave(friends: Friends)
+    fun userRatingSave(userRating: UserRating)
+    fun userEventSave(userEvent: UserEvent)
 }

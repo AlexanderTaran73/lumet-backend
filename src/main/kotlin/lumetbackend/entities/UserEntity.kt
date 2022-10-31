@@ -6,6 +6,8 @@ import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 import org.hibernate.annotations.TypeDefs
 import javax.persistence.*
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
 
 @TypeDefs(
         TypeDef(name = "int-array", typeClass = IntArrayType::class),
@@ -15,70 +17,90 @@ import javax.persistence.*
 @Entity
 @Table(name = "user", schema = "public", catalog = "lumetdatabase")
 open class UserEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    open var id: Int? = null
-
-
-    @Column(name = "login", nullable = false)
-    open var login: String? = null
-
-    @Column(name = "password", nullable = false)
-    open var password: String? = null
-
-    @Column(name = "email", nullable = false)
-    open var email: String? = null
-
-    @Column(name = "status", nullable = false, length = 10)
-    open var status: String = "OFFLINE"
-
-    @Column(name = "privacystatus", nullable = false, length = 50)
-    open var privacystatus: String = "ALL"
-
-    @Column(name = "age")
-    open var age: Int? = null
-
-    @Column(name = "avatarimage")
-    open var avatarimage: String? = null
-
-    @Column(name = "rating", nullable = false)
-    open var rating: Int = 10
-
-    @Column(name = "hobbytype", length = 50)
-    open var hobbytype: String? = null
-
-    @ManyToOne
-    @JoinColumn(name = "roleid", nullable = false)
-    open var roleid: RoleEntity? = null
-
-
-
-    @Type(type = "int-array")
-    @Column(name = "blacklist")
-    open var blacklist: Array<Int> = arrayOf()
-
-    @Type(type = "int-array")
-    @Column(name = "friendlist")
-    open var friendlist: Array<Int> = arrayOf()
-
-    @Type(type = "string-array")
-    @Column(name = "images")
-    open var images: Array<String> = arrayOf()
-
-
-    @Type(type = "int-array")
-    @Column(name = "events_participation_id")
-    open var eventsParticipationId: Array<Int> = arrayOf()
-
-
-    @Type(type = "int-array")
-    @Column(name = "events")
-    open var events: Array<Int> = arrayOf()
-
     constructor(login: String?, password: String?, email: String?) {
         this.login = login
         this.password = password
         this.email = email
     }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    open var id: Int? = null
+
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "login", nullable = false)
+    open var login: String? = null
+
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "password", nullable = false)
+    open var password: String? = null
+
+    @Size(max = 255)
+    @NotNull
+    @Column(name = "email", nullable = false)
+    open var email: String? = null
+
+    @Column(name = "age")
+    open var age: Int? = null
+
+    @Size(max = 255)
+    @Column(name = "avatarimage")
+    open var avatarimage: String? = null
+
+    @Type(type = "string-array")
+    @Column(name = "images")
+    open var images: Array<String> = arrayOf()
+
+    @Type(type = "int-array")
+    @Column(name = "blacklist")
+    open var blacklist: Array<Int> = arrayOf()
+
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "account_statusid", nullable = false)
+    open var accountStatusid: AccountStatus? = null
+
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "roleid", nullable = false)
+    open var roleid: RoleEntity? = null
+
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ratingid", nullable = false)
+    open var ratingid: UserRating? = null
+
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "privacystatusid", nullable = false)
+    open var privacystatusid: UserPrivacystatus? = null
+
+    @NotNull
+    @ManyToOne( optional = false)
+    @JoinColumn(name = "user_events", nullable = false)
+    open var userEvents: UserEvent? = null
+
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "hobbytypeid", nullable = false)
+    open var hobbytypeid: Hobbytype? = null
+
+
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "friendsid", nullable = false)
+    open var friendsid: Friends? = null
+
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_colorid", nullable = false)
+    open var userColorid: UserColor? = null
+
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_languageid", nullable = false)
+    open var userLanguageid: UserLanguage? = null
 }

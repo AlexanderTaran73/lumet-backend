@@ -16,29 +16,29 @@ import javax.servlet.http.HttpServletRequest
 @RequestMapping("/users")
 class UsersController(private val usersService: UsersService) {
 
-    @GetMapping("/getUser")
-    fun getUser(request: HttpServletRequest): ResponseEntity<Any> {
-        return usersService.getUser(request)
-    }
-
-    @GetMapping("/getALLUsers")
-    fun getALLUsers(request: HttpServletRequest): ResponseEntity<Any>{
-        return usersService.getALLUsers(request)
-    }
-
-    @GetMapping("/getFriends")
-    fun getFriends(request: HttpServletRequest): ResponseEntity<Any>{
-        return usersService.getFriends(request)
-    }
-
-    @GetMapping("/getBlacklist")
-    fun getBlacklist(request: HttpServletRequest): ResponseEntity<Any>{
-        return usersService.getBlacklist(request)
-    }
-
-    @GetMapping("/getUserEvents")
-    fun getUserEvents(request: HttpServletRequest): ResponseEntity<Any>{
-        return usersService.getUserEvents(request)
-    }
+//    @GetMapping("/getUser")
+//    fun getUser(request: HttpServletRequest): ResponseEntity<Any> {
+//        return usersService.getUser(request)
+//    }
+//
+//    @GetMapping("/getALLUsers")
+//    fun getALLUsers(request: HttpServletRequest): ResponseEntity<Any>{
+//        return usersService.getALLUsers(request)
+//    }
+//
+//    @GetMapping("/getFriends")
+//    fun getFriends(request: HttpServletRequest): ResponseEntity<Any>{
+//        return usersService.getFriends(request)
+//    }
+//
+//    @GetMapping("/getBlacklist")
+//    fun getBlacklist(request: HttpServletRequest): ResponseEntity<Any>{
+//        return usersService.getBlacklist(request)
+//    }
+//
+//    @GetMapping("/getUserEvents")
+//    fun getUserEvents(request: HttpServletRequest): ResponseEntity<Any>{
+//        return usersService.getUserEvents(request)
+//    }
 }
 
