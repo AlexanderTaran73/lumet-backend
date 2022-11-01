@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServletRequest
 @RequestMapping("/users")
 class UsersController(private val usersService: UsersService) {
 
-//    @GetMapping("/getUser")
-//    fun getUser(request: HttpServletRequest): ResponseEntity<Any> {
-//        return usersService.getUser(request)
-//    }
+    @GetMapping("/getUser")
+    fun getUser(request: HttpServletRequest): ResponseEntity<Any> {
+        return usersService.getUser(request)
+    }
 //
 //    @GetMapping("/getALLUsers")
 //    fun getALLUsers(request: HttpServletRequest): ResponseEntity<Any>{

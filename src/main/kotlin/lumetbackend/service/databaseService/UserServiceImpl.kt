@@ -54,20 +54,6 @@ class UserServiceImpl(private val userRepository: UserRepository,
         userEntity.hobbytypeid = hobbytypeRepository.findByName("NOTHING")
         userEntity.privacystatusid = userPrivacystatusRepository.findByName("ALL")
 
-
-////        val friends = Friends()
-////        friendsRepository.save(friends)
-////
-//        userEntity.friendsid = friendsRepository.findById(0).get()
-////
-////        val  userRating = UserRating(10, arrayOf(), arrayOf())
-////        userRatingRepository.save(userRating)
-//        userEntity.ratingid = userRatingRepository.findById(0).get()
-////
-////        val userEvent = UserEvent(arrayOf(), arrayOf(), arrayOf(), arrayOf())
-////        userEventRepository.save(userEvent)
-//        userEntity.userEvents = userEventRepository.findById(0).get()
-
         userRepository.save(userEntity)
     }
     override fun findByEmailAndPassword(email: String, password: String): UserEntity? {

@@ -7,6 +7,7 @@ import lumetbackend.entities.DTO.UserBlacklistDTO
 import lumetbackend.entities.DTO.UserDTO
 import lumetbackend.entities.EventEntity
 import lumetbackend.entities.UserEntity
+import lumetbackend.repositories.*
 import lumetbackend.service.arrayService.ArrayService
 import lumetbackend.service.databaseService.EventService
 import lumetbackend.service.databaseService.UserService
@@ -18,13 +19,28 @@ import java.util.NoSuchElementException
 import javax.servlet.http.HttpServletRequest
 
 @Service
-class UsersService(private val jwtProvider: JwtProvider, private val userService: UserService, private val arrayService: ArrayService, private val eventService: EventService) {
+class UsersService(private val jwtProvider: JwtProvider,
+                   private val userService: UserService) {
 
-//    fun getUser(request: HttpServletRequest): ResponseEntity<Any> {
-//        val userEntity = getUserByRequest(request) ?: return ResponseEntity(HttpStatus.NOT_FOUND)
-//        val privateUserDTO = PrivateUserDTO(userEntity.id, userEntity.login, userEntity.email , userEntity.status, userEntity.privacystatus, userEntity.age, userEntity.avatarimage, userEntity.rating, userEntity.hobbytype, userEntity.events, userEntity.friendlist, userEntity.blacklist, userEntity.images)
-//        return ResponseEntity(privateUserDTO, HttpStatus.OK)
-//    }
+    fun getUser(request: HttpServletRequest): ResponseEntity<Any> {
+        val userEntity = getUserByRequest(request) ?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        val privateUserDTO = PrivateUserDTO(
+                userEntity.id,
+                userEntity.login,
+                userEntity.email,
+                userEntity.age,
+                userEntity.avatarimage,
+                userEntity.images,
+                userEntity.blacklist,
+                userEntity.ratingid!!.rating,
+                userEntity.privacystatusid!!.name,
+                userEntity.userEvents,
+                userEntity.hobbytypeid!!.name,
+                userEntity.friendsid,
+                userEntity.userColorid!!.name,
+                userEntity.userLanguageid!!.name)
+        return ResponseEntity(privateUserDTO, HttpStatus.OK)
+    }
 //
 //    fun getALLUsers(request: HttpServletRequest): ResponseEntity<Any>{
 //        val userEntity = getUserByRequest(request)
@@ -105,9 +121,9 @@ class UsersService(private val jwtProvider: JwtProvider, private val userService
 //    }
 //
 //
-//    fun getUserByRequest(request: HttpServletRequest): UserEntity?{
-//        val bearer = request.getHeader(JwtFilter.AUTHORIZATION)
-//        val token = if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) { bearer.substring(7) } else null
-//        return userService.findByEmail(jwtProvider.getEmailFromToken(token))
-//    }
+    fun getUserByRequest(request: HttpServletRequest): UserEntity?{
+        val bearer = request.getHeader(JwtFilter.AUTHORIZATION)
+        val token = if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) { bearer.substring(7) } else null
+        return userService.findByEmail(jwtProvider.getEmailFromToken(token))
+    }
 }
