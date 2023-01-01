@@ -58,6 +58,8 @@ open class UserEntity {
     @Column(name = "blacklist")
     open var blacklist: Array<Int> = arrayOf()
 
+
+
     @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "account_statusid", nullable = false)
@@ -73,10 +75,14 @@ open class UserEntity {
     @JoinColumn(name = "ratingid", nullable = false)
     open var ratingid: UserRating? = null
 
+//
+
     @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "privacystatusid", nullable = false)
     open var privacystatusid: UserPrivacystatus? = null
+
+//
 
     @NotNull
     @ManyToOne( optional = false)

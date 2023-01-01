@@ -20,26 +20,12 @@ import javax.servlet.http.HttpServletRequest
 
 @Service
 class UsersService(private val jwtProvider: JwtProvider,
-                   private val userService: UserService) {
+                   private val userService: UserService,
+                   private val arrayService: ArrayService) {
 
     fun getUser(request: HttpServletRequest): ResponseEntity<Any> {
         val userEntity = getUserByRequest(request) ?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        val privateUserDTO = PrivateUserDTO(
-                userEntity.id,
-                userEntity.login,
-                userEntity.email,
-                userEntity.age,
-                userEntity.avatarimage,
-                userEntity.images,
-                userEntity.blacklist,
-                userEntity.ratingid!!.rating,
-                userEntity.privacystatusid!!.name,
-                userEntity.userEvents,
-                userEntity.hobbytypeid!!.name,
-                userEntity.friendsid,
-                userEntity.userColorid!!.name,
-                userEntity.userLanguageid!!.name)
-        return ResponseEntity(privateUserDTO, HttpStatus.OK)
+        return ResponseEntity(userToprivateUserDTO(userEntity), HttpStatus.OK)
     }
 //
 //    fun getALLUsers(request: HttpServletRequest): ResponseEntity<Any>{
@@ -63,24 +49,26 @@ class UsersService(private val jwtProvider: JwtProvider,
 //        }else return ResponseEntity(HttpStatus.NOT_FOUND)
 //    }
 //
-//    fun getFriends(request: HttpServletRequest): ResponseEntity<Any>{
-//        val userEntity = getUserByRequest(request)
-//        return if(userEntity!=null) {
-//            var userFriends = userEntity.friendlist
-//            val userDTO = mutableListOf<UserDTO>()
-//            for (id in userEntity.friendlist){
-//                try {
-//                    val user = userService.findById(id).get()
-//                    userDTO.add(UserDTO(user.id, user.login, user.status, user.age, user.avatarimage, user.rating, user.hobbytype, user.events, user.friendlist, userEntity.images))
-//                } catch (_: NoSuchElementException) {
-//                    userFriends = arrayService.removeInt(userFriends, id)
-//                }
-//            }
-//            userEntity.friendlist = userFriends
-//            userService.save(userEntity)
-//            ResponseEntity(userDTO, HttpStatus.OK)
-//        }else ResponseEntity(HttpStatus.NOT_FOUND)
-//    }
+    fun getFriends(request: HttpServletRequest): ResponseEntity<Any>{
+        val userEntity = getUserByRequest(request)
+        return if(userEntity!=null) {
+            var userFriends = userEntity.friendsid!!.friendlist
+
+            val userDTO = mutableListOf<UserDTO>()
+            for (id in userFriends){
+                try {
+                    val user = userService.findById(id).get()
+                    userDTO.add(userToUserDTO(user))
+
+                } catch (_: NoSuchElementException) {
+                    userFriends = arrayService.removeInt(userFriends, id)
+                }
+            }
+            userEntity.friendsid!!.friendlist = userFriends
+            userService.save(userEntity)
+            ResponseEntity(userDTO, HttpStatus.OK)
+        }else ResponseEntity(HttpStatus.NOT_FOUND)
+    }
 //
 //    fun getBlacklist(request: HttpServletRequest): ResponseEntity<Any>{
 //        val userEntity = getUserByRequest(request)
@@ -125,5 +113,36 @@ class UsersService(private val jwtProvider: JwtProvider,
         val bearer = request.getHeader(JwtFilter.AUTHORIZATION)
         val token = if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) { bearer.substring(7) } else null
         return userService.findByEmail(jwtProvider.getEmailFromToken(token))
+    }
+
+    fun userToprivateUserDTO(userEntity:UserEntity): PrivateUserDTO{
+        val privateUserDTO = PrivateUserDTO(
+                userEntity.id,
+                userEntity.login,
+                userEntity.email,
+                userEntity.age,
+                userEntity.avatarimage,
+                userEntity.images,
+                userEntity.blacklist,
+                userEntity.ratingid!!.rating,
+                userEntity.privacystatusid!!.name,
+                userEntity.userEvents,
+                userEntity.hobbytypeid!!.name,
+                userEntity.friendsid,
+                userEntity.userColorid!!.name,
+                userEntity.userLanguageid!!.name)
+        return privateUserDTO
+    }
+
+    fun userToUserDTO(userEntity:UserEntity): UserDTO{
+        val userDTO = UserDTO(
+                userEntity.id,
+                userEntity.login,
+                userEntity.age,
+                userEntity.avatarimage,
+                userEntity.images,
+                userEntity.ratingid!!.rating,
+                userEntity.hobbytypeid!!.name)
+        return userDTO
     }
 }

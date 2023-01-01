@@ -7,6 +7,7 @@ import lumetbackend.entities.UserEntity
 import lumetbackend.service.arrayService.ArrayService
 import lumetbackend.service.databaseService.UserService
 import lumetbackend.service.requestServices.UserChangesService
+import org.jetbrains.annotations.NotNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.util.StringUtils
@@ -14,68 +15,40 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
+import javax.validation.constraints.Past
 
 
 @RestController
 @RequestMapping("/users/change_user")
 class UserChangesController(private val userChangesService: UserChangesService) {
 
-//    @PostMapping("/change_login")
-//    fun changeLogin(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any> {
-//        return userChangesService.changeLogin(request, stringRequest)
-//    }
-//
-//    @PostMapping("/change_password")
-//    fun changePassword(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return userChangesService.changePassword(request, stringRequest)
-//    }
-////
+    @PostMapping("/change_login")
+    fun changeLogin(request: HttpServletRequest, @Valid @RequestBody @NotNull login: String): ResponseEntity<Any> {
+        return userChangesService.changeLogin(request, login)
+    }
+
+
 ////    @PostMapping("/change_email")
 ////    fun changeEmail(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
 ////        return ResponseEntity(HttpStatus.FORBIDDEN)
 ////    }
-//
-//    @PostMapping("/change_privacystatus")
-//    fun changePrivacyStatus(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return userChangesService.changePrivacyStatus(request, stringRequest)
-//    }
-//
-//    @PostMapping("/change_age")
-//    fun changeAge(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return userChangesService.changeAge(request, stringRequest)
-//    }
-//
+
+    @PostMapping("/change_password")
+    fun changePassword(request: HttpServletRequest, @Valid @RequestBody @NotNull password: String): ResponseEntity<Any>{
+        return userChangesService.changePassword(request, password)
+    }
+
+    @PostMapping("/change_age")
+    fun changeAge(request: HttpServletRequest, @Valid @RequestBody age: String): ResponseEntity<Any>{
+        return userChangesService.changeAge(request, age)
+    }
+
+
 //    @PostMapping("/change_avatarimage")
 //    fun changeAvatarImage(@RequestParam("imageFile") imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any>{
 //        return userChangesService.changeAvatarImage(imageFile, request)
 //    }
-//
-//    @PostMapping("/change_hobbytype")
-//    fun changeHobbyType(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return userChangesService.changeHobbyType(request, stringRequest)
-//    }
-//
-//
-//    @PostMapping("/add_to_blacklist")
-//    fun AddToBlacklist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return userChangesService.AddToBlacklist(request, stringRequest)
-//    }
-//    @PostMapping("/delete_frome_blacklist")
-//    fun DeleteFromeBlacklist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return userChangesService.DeleteFromeBlacklist(request, stringRequest)
-//    }
-//
-//
-//    @PostMapping("/add_to_friendlist")
-//    fun AddToFriendlist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return userChangesService.AddToFriendlist(request, stringRequest)
-//    }
-//    @PostMapping("/delete_frome_friendlist")
-//    fun DeleteFromeFriendlist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return userChangesService.DeleteFromeFriendlist(request, stringRequest)
-//    }
-//
-//
+
 //    @PostMapping("/add_to_images")
 //    fun AddToImages(@RequestParam("imageFile") imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any>{
 //        if (imageFile==null)return ResponseEntity(HttpStatus.LOCKED)
@@ -86,14 +59,61 @@ class UserChangesController(private val userChangesService: UserChangesService) 
 //        return userChangesService.DeleteFromeImages(request, stringRequest)
 //    }
 
+    @PostMapping("/add_to_blacklist")
+    fun AddToBlacklist(request: HttpServletRequest, @Valid @RequestBody userId: String): ResponseEntity<Any>{
+        return userChangesService.addToBlacklist(request, userId)
+    }
+    @PostMapping("/delete_frome_blacklist=")
+    fun DeleteFromeBlacklist(request: HttpServletRequest, @Valid @RequestBody userId: String): ResponseEntity<Any>{
+        return userChangesService.deleteFromeBlacklist(request, userId)
+    }
 
-//    @PostMapping("/add_to_events_participation")
-//    fun AddToEventsParticipation(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return ResponseEntity(HttpStatus.FORBIDDEN)
+
+
+
+//
+//    @PostMapping("/change_privacystatus")
+//    fun changePrivacyStatus(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+//        return userChangesService.changePrivacyStatus(request, stringRequest)
 //    }
-//    @PostMapping("/delete_frome_events_participation")
-//    fun DeleteFromeEventsParticipation(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return ResponseEntity(HttpStatus.FORBIDDEN)
+//
+
+//
+//    user_events
+//
+    @PostMapping("/change_hobbytype/{hobbytypeName}")
+    fun changeHobbyType(request: HttpServletRequest, @PathVariable hobbytypeName: String): ResponseEntity<Any>{
+//    hobbytypeName:
+//            0 NOTHING
+//            1
+//            2
+        return userChangesService.changeHobbyType(request, hobbytypeName)
+    }
+
+//
+//    @PostMapping("/add_to_friendlist")
+//    fun AddToFriendlist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+//        return userChangesService.AddToFriendlist(request, stringRequest)
+//    }
+//    @PostMapping("/delete_frome_friendlist")
+//    fun DeleteFromeFriendlist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+//        return userChangesService.DeleteFromeFriendlist(request, stringRequest)
 //    }
 
+
+    @PostMapping("/chane_color/{colorName}")
+    fun changeColor(request: HttpServletRequest, @PathVariable colorName:String): ResponseEntity<Any>{
+//    colorName:
+//            0 LIGHT
+//            1 DARK
+        return userChangesService.changeColor(request, colorName)
+    }
+
+    @PostMapping("/change_language/{languageName}")
+    fun changeLanguage(request: HttpServletRequest, @PathVariable languageName:String): ResponseEntity<Any>{
+//    languageName:
+//            0 RUS
+//            1 EN
+        return userChangesService.changeLanguage(request, languageName)
+    }
 }

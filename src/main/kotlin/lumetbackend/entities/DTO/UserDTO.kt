@@ -7,14 +7,14 @@ import lumetbackend.entities.UserEvent
 class UserDTO(
         var id: Int?,
         var login: String?,
-//        var status: String?,
-//        var age: Int?,
-//        var avatarimage: String?,
-//        var rating: Int?,
-//        var hobbytype: String?,
+        var age: Int?,
+        var avatarimage: String?,
+        var images: Array<String>?,
+        var rating: Int?,
+        var hobbytype: String?,
 //        var events: Array<Int>?,
 //        var friendlist: Array<Int>?,
-//        var images: Array<String>?
+
 )
 
 

@@ -26,10 +26,10 @@ class UsersController(private val usersService: UsersService) {
 //        return usersService.getALLUsers(request)
 //    }
 //
-//    @GetMapping("/getFriends")
-//    fun getFriends(request: HttpServletRequest): ResponseEntity<Any>{
-//        return usersService.getFriends(request)
-//    }
+    @GetMapping("/getFriends")
+    fun getFriends(request: HttpServletRequest): ResponseEntity<Any>{
+        return usersService.getFriends(request)
+    }
 //
 //    @GetMapping("/getBlacklist")
 //    fun getBlacklist(request: HttpServletRequest): ResponseEntity<Any>{
