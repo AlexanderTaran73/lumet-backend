@@ -1,9 +1,6 @@
 package lumetbackend.service.databaseService
 
-import lumetbackend.entities.Friends
-import lumetbackend.entities.UserEntity
-import lumetbackend.entities.UserEvent
-import lumetbackend.entities.UserRating
+import lumetbackend.entities.*
 import java.util.*
 
 interface UserService {
@@ -26,4 +23,6 @@ interface UserService {
     fun friendsSave(friends: Friends)
     fun userRatingSave(userRating: UserRating)
     fun userEventSave(userEvent: UserEvent)
+    fun userPrivacystatusSave(userPrivacystatus: UserPrivacystatus)
+    fun savePassword(userEntity: UserEntity)
 }

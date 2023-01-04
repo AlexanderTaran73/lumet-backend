@@ -6,6 +6,7 @@ import lumetbackend.controller.RegistrationRequest
 import lumetbackend.entities.*
 import lumetbackend.repositories.FriendsRepository
 import lumetbackend.repositories.UserEventRepository
+import lumetbackend.repositories.UserPrivacystatusRepository
 import lumetbackend.repositories.UserRatingRepository
 import lumetbackend.service.databaseService.RegistrationDataService
 import lumetbackend.service.databaseService.UserService
@@ -23,7 +24,8 @@ class RegistrationService(private val registrationDataService: RegistrationDataS
                           private val jwtProvider: JwtProvider,
                           private val friendsRepository: FriendsRepository,
                           private val userRatingRepository: UserRatingRepository,
-                          private val userEventRepository: UserEventRepository){
+                          private val userEventRepository: UserEventRepository,
+                          private val userPrivacystatusRepository: UserPrivacystatusRepository){
 
     fun Registration(registrationRequest: RegistrationRequest): ResponseEntity<Any> {
         val login = registrationRequest.login
@@ -65,6 +67,10 @@ class RegistrationService(private val registrationDataService: RegistrationDataS
         val userEvent = UserEvent(arrayOf(), arrayOf(), arrayOf(), arrayOf())
         userService.userEventSave(userEvent)
         userEntity.userEvents = userEventRepository.findById(userEvent.id!!).get()
+
+        val userPrivacystatus = UserPrivacystatus("ALL", "ALL", "ALL")
+        userService.userPrivacystatusSave(userPrivacystatus)
+        userEntity.privacystatusid = userPrivacystatusRepository.findById(userPrivacystatus.id!!).get()
 
         userService.firstsave(userEntity)
         registrationDataService.deleteByEmail(email)

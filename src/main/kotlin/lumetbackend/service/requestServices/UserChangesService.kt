@@ -2,25 +2,26 @@ package lumetbackend.service.requestServices
 
 import lumetbackend.config.jwt.JwtFilter
 import lumetbackend.config.jwt.JwtProvider
+import lumetbackend.entities.RegistrationDataEntity
 import lumetbackend.service.imageservice.service.FileService
-import lumetbackend.entities.DTO.PrivateUserDTO
 import lumetbackend.entities.UserEntity
 import lumetbackend.repositories.HobbytypeRepository
 import lumetbackend.repositories.UserColorRepository
 import lumetbackend.repositories.UserLanguageRepository
+import lumetbackend.repositories.UserPrivacystatusRepository
 import lumetbackend.service.arrayService.ArrayService
+import lumetbackend.service.databaseService.RegistrationDataService
 import lumetbackend.service.databaseService.UserService
+import lumetbackend.service.emailService.EmailService
+import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletRequest
-import javax.validation.Valid
+
 
 @Service
 class UserChangesService(private val jwtProvider: JwtProvider,
@@ -30,7 +31,10 @@ class UserChangesService(private val jwtProvider: JwtProvider,
                          private val fileService: FileService,
                          private val hobbytypeRepository: HobbytypeRepository,
                          private val userLanguageRepository: UserLanguageRepository,
-                         private val userColorRepository: UserColorRepository,) {
+                         private val userColorRepository: UserColorRepository,
+                         private val userPrivacystatusRepository: UserPrivacystatusRepository,
+                         private val emailService: EmailService,
+                         private val registrationDataService: RegistrationDataService,) {
 
 
 
@@ -47,10 +51,34 @@ class UserChangesService(private val jwtProvider: JwtProvider,
     fun changePassword(request: HttpServletRequest, password: String): ResponseEntity<Any>{
         val user = getUserByRequest(request)!!
         user.password = password
-        userService.firstsave(user)
+        userService.savePassword(user)
         return ResponseEntity(HttpStatus.OK)
     }
 
+    fun changeEmail(request: HttpServletRequest, email: String): ResponseEntity<Any> {
+        val emailtoken = (1000..9999).random()
+        registrationDataService.deleteByEmail(email)
+        val registrationDataEntity = RegistrationDataEntity("changeEmail", "changeEmail", email, emailtoken)
+        registrationDataService.save(registrationDataEntity)
+
+        emailService.sendEmailToken(email, emailtoken.toString())
+
+        return ResponseEntity(HttpStatus.OK)
+    }
+
+    fun changeEmailConfirmation(request: HttpServletRequest, email: String, token: Int): ResponseEntity<Any> {
+        val user = getUserByRequest(request)!!
+        val registrationDataEntity = registrationDataService.findByEmail(email)
+
+        if (registrationDataEntity==null) return ResponseEntity(HttpStatus.NOT_FOUND)
+        if (registrationDataEntity.emailtoken!=token) return ResponseEntity((HttpStatus.valueOf("Invalid token")))
+
+        user.email = email
+        registrationDataService.deleteByEmail(email)
+        userService.save(user)
+
+        return ResponseEntity(HttpStatus.OK)
+    }
 
     fun changeAge(request: HttpServletRequest, age: String): ResponseEntity<Any>{
         val user = getUserByRequest(request)!!
@@ -64,9 +92,32 @@ class UserChangesService(private val jwtProvider: JwtProvider,
         return ResponseEntity(HttpStatus.OK)
     }
 
-//////////
 
-////////
+    fun changeAvatarImage(imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any> {
+        val user = getUserByRequest(request)!!
+        val name = fileService.saveImage(imageFile)
+        user.avatarimage = name
+        userService.save(user)
+        return ResponseEntity(HttpStatus.OK)
+    }
+
+    fun addToImages(imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any> {
+        val user = getUserByRequest(request)!!
+        val name = fileService.saveImage(imageFile)
+
+        user.images = arrayService.appendString(user.images, name)
+        userService.save(user)
+        return ResponseEntity(HttpStatus.OK)
+    }
+
+
+    fun deleteFromeImages(request: HttpServletRequest, name: String): ResponseEntity<Any> {
+        val user = getUserByRequest(request)!!
+
+        user.images = arrayService.removeString(user.images, name)
+        userService.save(user)
+        return ResponseEntity(HttpStatus.OK)
+    }
 
     fun addToBlacklist(request: HttpServletRequest, userId: String): ResponseEntity<Any>{
         val user = getUserByRequest(request)!!
@@ -92,6 +143,51 @@ class UserChangesService(private val jwtProvider: JwtProvider,
 
         userService.save(user)
         return ResponseEntity(HttpStatus.OK)
+    }
+
+    fun changeProfilePrivacyStatus(request: HttpServletRequest, status: String): ResponseEntity<Any> {
+        val user = getUserByRequest(request)!!
+        val userPrivacystatus = user.privacystatusid!!
+        val statusArray = arrayOf("ALL", "FRIENDS", "NOBODY")
+        if (status in statusArray){
+            userPrivacystatus.profile = status
+            userService.userPrivacystatusSave(userPrivacystatus)
+            user.privacystatusid = userPrivacystatusRepository.findById(userPrivacystatus.id!!).get()
+
+            userService.save(user)
+            return ResponseEntity(HttpStatus.OK)
+        }
+        else return ResponseEntity(HttpStatus.valueOf("Incorrect status"))
+    }
+
+    fun changeMapPrivacyStatus(request: HttpServletRequest, status: String): ResponseEntity<Any> {
+        val user = getUserByRequest(request)!!
+        val userPrivacystatus = user.privacystatusid!!
+        val statusArray = arrayOf("ALL", "FRIENDS", "NOBODY")
+        if (status in statusArray){
+            userPrivacystatus.map = status
+            userService.userPrivacystatusSave(userPrivacystatus)
+            user.privacystatusid = userPrivacystatusRepository.findById(userPrivacystatus.id!!).get()
+
+            userService.save(user)
+            return ResponseEntity(HttpStatus.OK)
+        }
+        else return ResponseEntity(HttpStatus.valueOf("Incorrect status"))
+    }
+
+    fun changeChatPrivacyStatus(request: HttpServletRequest, status: String): ResponseEntity<Any> {
+        val user = getUserByRequest(request)!!
+        val userPrivacystatus = user.privacystatusid!!
+        val statusArray = arrayOf("ALL", "FRIENDS", "NOBODY")
+        if (status in statusArray){
+            userPrivacystatus.chat = status
+            userService.userPrivacystatusSave(userPrivacystatus)
+            user.privacystatusid = userPrivacystatusRepository.findById(userPrivacystatus.id!!).get()
+
+            userService.save(user)
+            return ResponseEntity(HttpStatus.OK)
+        }
+        else return ResponseEntity(HttpStatus.valueOf("Incorrect status"))
     }
 
 
@@ -149,7 +245,6 @@ class UserChangesService(private val jwtProvider: JwtProvider,
         val token = if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) { bearer.substring(7) } else null
         return userService.findByEmail(jwtProvider.getEmailFromToken(token))
     }
-
 
 
 

@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface UserPrivacystatusRepository : JpaRepository<UserPrivacystatus, Int>{
-    fun findByName(name: String): UserPrivacystatus
+
 }

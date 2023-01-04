@@ -58,7 +58,7 @@ open class UserEntity {
     @Column(name = "blacklist")
     open var blacklist: Array<Int> = arrayOf()
 
-
+//
 
     @NotNull
     @ManyToOne(optional = false)

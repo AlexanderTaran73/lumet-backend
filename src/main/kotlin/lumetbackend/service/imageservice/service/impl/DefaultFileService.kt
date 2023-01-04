@@ -18,7 +18,9 @@ class DefaultFileService : FileService {
     override val rootFolder: String
 
 
-        get() = "D:/photos/"
+//        get() = "../img/"
+        get() = "/root/test/img/"
+//        get() = "D:/photos/"
 
 
     override fun saveImage(imageFile: MultipartFile): String {

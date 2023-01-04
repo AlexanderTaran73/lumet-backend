@@ -52,10 +52,16 @@ class UserServiceImpl(private val userRepository: UserRepository,
         userEntity.userColorid = userColorRepository.findByName("LIGHT")
         userEntity.password = passwordEncoder.encode(userEntity.password)
         userEntity.hobbytypeid = hobbytypeRepository.findByName("NOTHING")
-        userEntity.privacystatusid = userPrivacystatusRepository.findByName("ALL")
+//        userEntity.privacystatusid = userPrivacystatusRepository.findByName("ALL")
 
         userRepository.save(userEntity)
     }
+
+    override fun savePassword(userEntity: UserEntity) {
+        userEntity.password = passwordEncoder.encode(userEntity.password)
+        userRepository.save(userEntity)
+    }
+
     override fun findByEmailAndPassword(email: String, password: String): UserEntity? {
         val userEntity: UserEntity? = userRepository.findByEmail(email)
         if (userEntity != null) {
@@ -76,6 +82,10 @@ class UserServiceImpl(private val userRepository: UserRepository,
 
     override fun userEventSave(userEvent: UserEvent) {
         userEventRepository.save(userEvent)
+    }
+
+    override fun userPrivacystatusSave(userPrivacystatus: UserPrivacystatus) {
+        userPrivacystatusRepository.save(userPrivacystatus)
     }
 
 
