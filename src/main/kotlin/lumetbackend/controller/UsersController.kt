@@ -24,7 +24,7 @@ class UsersController(private val usersService: UsersService) {
 //    @GetMapping("/getALLUsers")
 //    fun getALLUsers(request: HttpServletRequest): ResponseEntity<Any>{
 //        return usersService.getALLUsers(request)
-//    }
+//    }        TODO сделать что-то
 //
     @GetMapping("/getFriends")
     fun getFriends(request: HttpServletRequest): ResponseEntity<Any>{

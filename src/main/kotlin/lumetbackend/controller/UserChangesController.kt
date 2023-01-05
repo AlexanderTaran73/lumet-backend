@@ -55,25 +55,14 @@ class UserChangesController(private val userChangesService: UserChangesService) 
     }
 
     @PostMapping("/add_to_images")
-    fun AddToImages(@RequestParam("imageFile") imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any>{
+    fun addToImages(@RequestParam("imageFile") imageFile: MultipartFile, request: HttpServletRequest): ResponseEntity<Any>{
         if (imageFile==null)return ResponseEntity(HttpStatus.LOCKED)
         return userChangesService.addToImages(imageFile, request)
     }
     @PostMapping("/delete_frome_images")
-    fun DeleteFromeImages(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
+    fun deleteFromeImages(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
         return userChangesService.deleteFromeImages(request, stringRequest)
     }
-
-    @PostMapping("/add_to_blacklist/{userId}")
-    fun AddToBlacklist(request: HttpServletRequest, @PathVariable @NotNull userId: String): ResponseEntity<Any>{
-        return userChangesService.addToBlacklist(request, userId)
-    }
-    @PostMapping("/delete_frome_blacklist/{userId}")
-    fun DeleteFromeBlacklist(request: HttpServletRequest, @PathVariable @NotNull userId: String): ResponseEntity<Any>{
-        return userChangesService.deleteFromeBlacklist(request, userId)
-    }
-
-
 
 
 

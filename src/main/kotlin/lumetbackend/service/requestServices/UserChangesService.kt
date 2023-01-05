@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest
 class UserChangesService(private val jwtProvider: JwtProvider,
                          private val userService: UserService,
                          private val arrayService: ArrayService,
-                         private val passwordEncoder : PasswordEncoder,
                          private val fileService: FileService,
                          private val hobbytypeRepository: HobbytypeRepository,
                          private val userLanguageRepository: UserLanguageRepository,
@@ -119,31 +118,7 @@ class UserChangesService(private val jwtProvider: JwtProvider,
         return ResponseEntity(HttpStatus.OK)
     }
 
-    fun addToBlacklist(request: HttpServletRequest, userId: String): ResponseEntity<Any>{
-        val user = getUserByRequest(request)!!
-        val blacklist = user.blacklist
-        try {
-            user.blacklist = arrayService.appendInt(blacklist, userId.toInt())
-        }catch (_: Exception){
-            return ResponseEntity(HttpStatus.valueOf("NOT INT"))
-        }
 
-        userService.save(user)
-        return ResponseEntity(HttpStatus.OK)
-    }
-
-    fun deleteFromeBlacklist(request: HttpServletRequest, userId: String): ResponseEntity<Any>{
-        val user = getUserByRequest(request)!!
-        val blacklist = user.blacklist
-        try {
-            user.blacklist = arrayService.removeInt(blacklist, userId.toInt())
-        }catch (_: Exception){
-            return ResponseEntity(HttpStatus.valueOf("NOT INT"))
-        }
-
-        userService.save(user)
-        return ResponseEntity(HttpStatus.OK)
-    }
 
     fun changeProfilePrivacyStatus(request: HttpServletRequest, status: String): ResponseEntity<Any> {
         val user = getUserByRequest(request)!!
