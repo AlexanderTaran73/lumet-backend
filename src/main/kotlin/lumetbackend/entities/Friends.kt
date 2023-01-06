@@ -34,4 +34,11 @@ open class Friends{
     @Type(type = "int-array")
     @Column(name = "requests_to_user", nullable = false)
     open var requestsToUser: Array<Int> = arrayOf()
+
+    constructor(id: Int?, friendlist: Array<Int>, userRequests: Array<Int>, requestsToUser: Array<Int>) {
+        this.id = id
+        this.friendlist = friendlist
+        this.userRequests = userRequests
+        this.requestsToUser = requestsToUser
+    }
 }

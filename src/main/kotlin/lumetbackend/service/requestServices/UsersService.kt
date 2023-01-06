@@ -2,10 +2,10 @@ package lumetbackend.service.requestServices
 
 import lumetbackend.config.jwt.JwtFilter
 import lumetbackend.config.jwt.JwtProvider
-import lumetbackend.entities.DTO.PrivateUserDTO
-import lumetbackend.entities.DTO.UserBlacklistDTO
+
 import lumetbackend.entities.DTO.UserDTO
 import lumetbackend.entities.EventEntity
+import lumetbackend.entities.Friends
 import lumetbackend.entities.UserEntity
 import lumetbackend.repositories.*
 import lumetbackend.service.arrayService.ArrayService
@@ -25,69 +25,159 @@ class UsersService(private val jwtProvider: JwtProvider,
 
     fun getUser(request: HttpServletRequest): ResponseEntity<Any> {
         val userEntity = getUserByRequest(request) ?: return ResponseEntity(HttpStatus.NOT_FOUND)
-        return ResponseEntity(userToprivateUserDTO(userEntity), HttpStatus.OK)
+        if (userEntity.accountStatusid!!.name=="ACTIVE") return ResponseEntity(userToPrivateUserDTO(userEntity), HttpStatus.OK)
+        else if (userEntity.accountStatusid!!.name=="REMOVED") return ResponseEntity(HttpStatus.valueOf("REMOVED"))
+        else return ResponseEntity(HttpStatus.valueOf("BANNED or smth else"))
     }
-//
-//    fun getALLUsers(request: HttpServletRequest): ResponseEntity<Any>{
-//        val userEntity = getUserByRequest(request)
-//        val userEntityList = userService.findAll()
-//        if(userEntity!=null) {
-//            val userDTO = mutableListOf<UserDTO>()
-//            for (user in userEntityList) {
-//                if (user.id!=userEntity.id){
-//                    if (user.privacystatus == "ALL"){
-//                        if (!user.blacklist.contains(userEntity.id)) userDTO.add(UserDTO(user.id, user.login, user.status, user.age, user.avatarimage, user.rating, user.hobbytype, user.events, user.friendlist, userEntity.images))
-//                    }
-//                    else {
-//                        if (user.privacystatus == "FRIENDSONLY" && user.friendlist.contains(userEntity.id)){
-//                            userDTO.add(UserDTO(user.id, user.login, user.status, user.age, user.avatarimage, user.rating, user.hobbytype, user.events, user.friendlist, userEntity.images))
-//                        }
-//                    }
-//                }
-//            }
-//            return ResponseEntity(userDTO, HttpStatus.OK)
-//        }else return ResponseEntity(HttpStatus.NOT_FOUND)
-//    }
-//
-    fun getFriends(request: HttpServletRequest): ResponseEntity<Any>{
-        val userEntity = getUserByRequest(request)
-        return if(userEntity!=null) {
-            var userFriends = userEntity.friendsid!!.friendlist
 
-            val userDTO = mutableListOf<UserDTO>()
-            for (id in userFriends){
-                try {
-                    val user = userService.findById(id).get()
-                    userDTO.add(userToUserDTO(user))
+    fun getUserById(request: HttpServletRequest, userId: Int): ResponseEntity<Any> {
+        val userEntity = getUserByRequest(request) ?: return ResponseEntity(HttpStatus.NOT_FOUND)
+        try {
+            val user = userService.findById(userId).get()
+            var userDTO: UserDTO? = null
 
-                } catch (_: NoSuchElementException) {
-                    userFriends = arrayService.removeInt(userFriends, id)
+            if (user.id!=userEntity.id) {
+                if (user.accountStatusid!!.name == "ACTIVE") {
+                    if (!user.blacklist.contains(userEntity.id)) {
+                        if (user.privacystatusid!!.profile == "ALL") {
+                            userDTO = userToUserDTO(user)
+
+                        } else if (user.privacystatusid!!.profile == "FRIENDS") {
+                            if (user.friendsid!!.friendlist.contains(userEntity.id)) {
+                                userDTO = userToUserDTO(user)
+                            } else {
+                                userDTO = userToClosedUserDTO(user)
+                            }
+                        } else if (user.privacystatusid!!.profile == "NOBODY") {
+                            userDTO = userToClosedUserDTO(user)
+                        }
+                    }
                 }
             }
-            userEntity.friendsid!!.friendlist = userFriends
-            userService.save(userEntity)
-            ResponseEntity(userDTO, HttpStatus.OK)
-        }else ResponseEntity(HttpStatus.NOT_FOUND)
+            return ResponseEntity(userDTO, HttpStatus.OK)
+        }catch (_:Exception){
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        }
     }
-//
-//    fun getBlacklist(request: HttpServletRequest): ResponseEntity<Any>{
+
+    fun getUserListById(request: HttpServletRequest, userIdList: List<Int>): ResponseEntity<Any> {
+        val userEntity = getUserByRequest(request)?: return ResponseEntity(HttpStatus.NOT_FOUND)
+
+        val userDTO = mutableListOf<UserDTO>()
+        for (id in userIdList){
+            try {
+                val user = userService.findById(id).get()
+                if (user.id!=userEntity.id) {
+                    if (user.accountStatusid!!.name == "ACTIVE") {
+                        if (!user.blacklist.contains(userEntity.id)) {
+                            if (user.privacystatusid!!.profile == "ALL") {
+                                userDTO.add(userToUserDTO(user))
+
+                            } else if (user.privacystatusid!!.profile == "FRIENDS") {
+                                if (user.friendsid!!.friendlist.contains(userEntity.id)) {
+                                    userDTO.add(userToUserDTO(user))
+                                }
+                                else{
+                                    userDTO.add(userToClosedUserDTO(user))
+                                }
+                            } else if (user.privacystatusid!!.profile == "NOBODY") {
+                                userDTO.add(userToClosedUserDTO(user))
+                            }
+                        }
+                    }
+                }else{
+                    if (user.accountStatusid!!.name == "ACTIVE"){
+                        userDTO.add(userToPrivateUserDTO(user))
+                    }
+                }
+            }catch (_: NoSuchElementException) { }
+        }
+        return ResponseEntity(userDTO, HttpStatus.OK)
+    }
+
+
+    fun getALLUsers(request: HttpServletRequest): ResponseEntity<Any>{
+        val userEntity = getUserByRequest(request)
+        if(userEntity!=null) {
+            val userEntityList = userService.findAll()
+
+            val userDTO = mutableListOf<UserDTO>()
+            for (user in userEntityList) {
+                if (user.id!=userEntity.id) {
+                    if (user.accountStatusid!!.name == "ACTIVE") {
+                        if (!user.blacklist.contains(userEntity.id)) {
+                            if (user.privacystatusid!!.profile == "ALL") {
+                                userDTO.add(userToUserDTO(user))
+                            } else if (user.privacystatusid!!.profile == "FRIENDS") {
+                                if (user.friendsid!!.friendlist.contains(userEntity.id)) {
+                                    userDTO.add(userToUserDTO(user))
+                                }
+                                else{
+                                    userDTO.add(userToClosedUserDTO(user))
+                                }
+                            } else if (user.privacystatusid!!.profile == "NOBODY") {
+                                userDTO.add(userToClosedUserDTO(user))
+                            }
+                        }
+                    }
+                }else{
+                    if (user.accountStatusid!!.name == "ACTIVE"){
+                        userDTO.add(userToPrivateUserDTO(user))
+                    }
+                }
+            }
+            return ResponseEntity(userDTO, HttpStatus.OK)
+        }else return ResponseEntity(HttpStatus.NOT_FOUND)
+    }
+
+
+    //    НЕ имеет смысла? аналогично getUserListById
+
+//    fun getFriends(request: HttpServletRequest): ResponseEntity<Any>{
 //        val userEntity = getUserByRequest(request)
 //        return if(userEntity!=null) {
-//            var userBlacklist = userEntity.blacklist
-//            val userDTO = mutableListOf<UserBlacklistDTO>()
-//            for (id in userEntity.blacklist){
+//            var userFriends = userEntity.friendsid!!.friendlist
+//
+//            val userDTO = mutableListOf<UserDTO>()
+//            for (id in userFriends){
 //                try {
 //                    val user = userService.findById(id).get()
-//                    userDTO.add(UserBlacklistDTO(user.id, user.login, user.age, user.avatarimage, user.rating))
+//                    if (user.accountStatusid!!.name == "ACTIVE") {
+//                        if (user.privacystatusid!!.profile == "NOBODY") {
+//                            userDTO.add(userToClosedUserDTO(user))
+//                        }else if(user.privacystatusid!!.profile == "FRIENDS" || user.privacystatusid!!.profile == "ALL"){
+//                            userDTO.add(userToUserDTO(user))
+//                        }
+//                    }
 //                } catch (_: NoSuchElementException) {
-//                    userBlacklist = arrayService.removeInt(userBlacklist, id)
+//                    userFriends = arrayService.removeInt(userFriends, id)
 //                }
 //            }
-//            userEntity.blacklist = userBlacklist
+//            userEntity.friendsid!!.friendlist = userFriends
 //            userService.save(userEntity)
 //            ResponseEntity(userDTO, HttpStatus.OK)
 //        }else ResponseEntity(HttpStatus.NOT_FOUND)
 //    }
+
+    fun getBlacklist(request: HttpServletRequest): ResponseEntity<Any>{
+        val userEntity = getUserByRequest(request)
+        return if(userEntity!=null) {
+            var userBlacklist = userEntity.blacklist
+            val userDTO = mutableListOf<UserDTO>()
+            for (id in userEntity.blacklist){
+                try {
+                    val user = userService.findById(id).get()
+                    if (user.accountStatusid!!.name=="ACTIVE")userDTO.add(userToBlacklistDTO(user))
+//                    else userBlacklist = arrayService.removeInt(userBlacklist, id)
+                } catch (_: NoSuchElementException) {
+                    userBlacklist = arrayService.removeInt(userBlacklist, id)
+                }
+            }
+            userEntity.blacklist = userBlacklist
+            userService.save(userEntity)
+            ResponseEntity(userDTO, HttpStatus.OK)
+        }else ResponseEntity(HttpStatus.NOT_FOUND)
+    }
 //
 //    fun getUserEvents(request: HttpServletRequest): ResponseEntity<Any>{
 //        val userEntity = getUserByRequest(request)
@@ -115,8 +205,8 @@ class UsersService(private val jwtProvider: JwtProvider,
         return userService.findByEmail(jwtProvider.getEmailFromToken(token))
     }
 
-    fun userToprivateUserDTO(userEntity:UserEntity): PrivateUserDTO{
-        val privateUserDTO = PrivateUserDTO(
+    fun userToPrivateUserDTO(userEntity:UserEntity): UserDTO{
+        val privateUserDTO = UserDTO(
                 userEntity.id,
                 userEntity.login,
                 userEntity.email,
@@ -125,6 +215,7 @@ class UsersService(private val jwtProvider: JwtProvider,
                 userEntity.images,
                 userEntity.blacklist,
                 userEntity.ratingid!!.rating,
+                userEntity.ratingid!!.ratingByUser.size,
                 userEntity.privacystatusid!!.profile,
                 userEntity.privacystatusid!!.map,
                 userEntity.privacystatusid!!.chat,
@@ -140,11 +231,65 @@ class UsersService(private val jwtProvider: JwtProvider,
         val userDTO = UserDTO(
                 userEntity.id,
                 userEntity.login,
+                null,
                 userEntity.age,
                 userEntity.avatarimage,
                 userEntity.images,
+                null,
                 userEntity.ratingid!!.rating,
-                userEntity.hobbytypeid!!.name)
+                userEntity.ratingid!!.ratingByUser.size,
+                userEntity.privacystatusid!!.profile,
+                userEntity.privacystatusid!!.map,
+                userEntity.privacystatusid!!.chat,
+                userEntity.userEvents,
+                userEntity.hobbytypeid!!.name,
+                Friends(userEntity.friendsid!!.id, userEntity.friendsid!!.friendlist, arrayOf(), arrayOf()),
+                null,
+                null)
         return userDTO
+    }
+
+    fun userToClosedUserDTO(userEntity:UserEntity): UserDTO{
+        val userDTO = UserDTO(
+                userEntity.id,
+                userEntity.login,
+                null,
+                userEntity.age,
+                userEntity.avatarimage,
+                null,
+                null,
+                userEntity.ratingid!!.rating,
+                userEntity.ratingid!!.ratingByUser.size,
+                userEntity.privacystatusid!!.profile,
+                userEntity.privacystatusid!!.map,
+                userEntity.privacystatusid!!.chat,
+                null,
+                null,
+                null,
+                null,
+                null)
+        return userDTO
+    }
+
+    fun userToBlacklistDTO(userEntity:UserEntity): UserDTO{
+        val blacklistUserDTO = UserDTO(
+                userEntity.id,
+                userEntity.login,
+                null,
+                userEntity.age,
+                userEntity.avatarimage,
+                null,
+                null,
+                userEntity.ratingid!!.rating,
+                userEntity.ratingid!!.ratingByUser.size,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null)
+        return blacklistUserDTO
     }
 }
