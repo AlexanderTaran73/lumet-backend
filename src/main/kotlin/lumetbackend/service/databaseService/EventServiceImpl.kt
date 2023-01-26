@@ -28,4 +28,8 @@ class EventServiceImpl(private val eventRepository: EventRepository): EventServi
     override fun save(eventEntity: EventEntity) {
         eventRepository.save(eventEntity)
     }
+
+    override fun deleteById(id: Int) {
+        eventRepository.deleteById(id)
+    }
 }

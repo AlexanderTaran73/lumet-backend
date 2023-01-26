@@ -41,4 +41,12 @@ open class Friends{
         this.userRequests = userRequests
         this.requestsToUser = requestsToUser
     }
+
+    constructor(friendlist: Array<Int>, userRequests: Array<Int>, requestsToUser: Array<Int>) {
+        this.friendlist = friendlist
+        this.userRequests = userRequests
+        this.requestsToUser = requestsToUser
+    }
+
+
 }

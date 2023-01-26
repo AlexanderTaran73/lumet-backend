@@ -56,7 +56,7 @@ class RegistrationService(private val registrationDataService: RegistrationDataS
         if (registrationDataEntity.emailtoken!=emailtoken) return ResponseEntity((HttpStatus.valueOf("Invalid token")))
         val userEntity = UserEntity(registrationDataEntity.login, registrationDataEntity.password, registrationDataEntity.email)
 
-        val friends = Friends()
+        val friends = Friends(arrayOf(), arrayOf(), arrayOf())
         userService.friendsSave(friends)
         userEntity.friendsid = friendsRepository.findById(friends.id!!).get()
 

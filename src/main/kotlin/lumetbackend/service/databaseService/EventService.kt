@@ -15,4 +15,6 @@ interface EventService {
     fun deleteByIdAndUserid(id: Int, userid:Int)
 
     fun save(eventEntity: EventEntity)
+
+    fun deleteById(id: Int)
 }

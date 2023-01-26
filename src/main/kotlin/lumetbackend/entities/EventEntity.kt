@@ -16,7 +16,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "event", schema = "public", catalog = "lumetdatabase")
-open class EventEntity {
+open class     EventEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -43,9 +43,6 @@ open class EventEntity {
     @Column(name = "\"time\"")
     open var time: String? = null
 
-    @Column(name = "coordinates")
-    open var coordinates: String? = null
-
     @Column(name = "desiredage")
     open var desiredage: Int? = null
 
@@ -69,19 +66,26 @@ open class EventEntity {
     @Column(name = "unconfirmed_participants")
     open var unconfirmedParticipants: Array<Int> = arrayOf()
 
-    constructor(userrating: Int?, userid: Int?, name: String?, description: String?, hobbytype: String?, time: String?, coordinates: String?, desiredage: Int?, participantLimit: Int?, participantsAnonymity: String?, privacyStatus: String?, registrationSettings: String?) {
+    @Column(name = "latitude")
+    open var latitude: String? = null
+
+    @Column(name = "longitude")
+    open var longitude: String? = null
+
+    constructor(userrating: Int?, userid: Int?, name: String?, description: String?, hobbytype: String?, time: String?, desiredage: Int?, participantLimit: Int?, participantsAnonymity: String?, privacyStatus: String?, registrationSettings: String?, latitude: String?, longitude: String?) {
         this.userrating = userrating
         this.userid = userid
         this.name = name
         this.description = description
         this.hobbytype = hobbytype
         this.time = time
-        this.coordinates = coordinates
         this.desiredage = desiredage
         this.participantLimit = participantLimit
         this.participantsAnonymity = participantsAnonymity
         this.privacyStatus = privacyStatus
         this.registrationSettings = registrationSettings
+        this.latitude = latitude
+        this.longitude = longitude
     }
 }
 

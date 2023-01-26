@@ -62,7 +62,7 @@ class UsersInteractionController(private val usersInteractionService: UsersInter
         return usersInteractionService.giveFeedback(request, userId, feedback)
     }
 
-    @PostMapping("cancel_feedback/{userId}")
+    @PostMapping("/cancel_feedback/{userId}")
     fun cancelFeedback(request: HttpServletRequest, @PathVariable @NotNull userId: Int): ResponseEntity<Any> {
         return usersInteractionService.cancelFeedback(request, userId)
     }

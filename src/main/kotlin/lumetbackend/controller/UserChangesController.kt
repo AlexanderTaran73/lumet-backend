@@ -1,21 +1,15 @@
 package lumetbackend.controller
 
-import lumetbackend.config.jwt.JwtFilter
-import lumetbackend.config.jwt.JwtProvider
-import lumetbackend.entities.DTO.PrivateUserDTO
-import lumetbackend.entities.UserEntity
-import lumetbackend.service.arrayService.ArrayService
-import lumetbackend.service.databaseService.UserService
+
 import lumetbackend.service.requestServices.UserChangesService
 import org.jetbrains.annotations.NotNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.util.StringUtils
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
-import javax.validation.constraints.Past
+
 
 
 @RestController
@@ -97,16 +91,6 @@ class UserChangesController(private val userChangesService: UserChangesService) 
 //            2
         return userChangesService.changeHobbyType(request, hobbytypeName)
     }
-
-//
-//    @PostMapping("/add_to_friendlist")
-//    fun AddToFriendlist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return userChangesService.AddToFriendlist(request, stringRequest)
-//    }
-//    @PostMapping("/delete_frome_friendlist")
-//    fun DeleteFromeFriendlist(request: HttpServletRequest, @Valid @RequestBody stringRequest: String): ResponseEntity<Any>{
-//        return userChangesService.DeleteFromeFriendlist(request, stringRequest)
-//    }
 
 
     @PostMapping("/chane_color/{colorName}")

@@ -10,4 +10,6 @@ interface EventRepository : JpaRepository<EventEntity, Int>{
     fun findAllByUserid(userid:Int):List<EventEntity>
     fun findAllByHobbytype(hobbytype:String):List<EventEntity>
     fun deleteByIdAndUserid(id: Int, userid:Int)
+
+
 }
