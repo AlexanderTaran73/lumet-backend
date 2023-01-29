@@ -32,4 +32,8 @@ class EventServiceImpl(private val eventRepository: EventRepository): EventServi
     override fun deleteById(id: Int) {
         eventRepository.deleteById(id)
     }
+
+    override fun findAll(): List<EventEntity> {
+        return eventRepository.findAll()
+    }
 }

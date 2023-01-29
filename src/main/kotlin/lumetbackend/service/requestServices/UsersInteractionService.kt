@@ -4,6 +4,7 @@ import lumetbackend.config.jwt.JwtFilter
 import lumetbackend.config.jwt.JwtProvider
 import lumetbackend.entities.UserEntity
 import lumetbackend.service.arrayService.ArrayService
+import lumetbackend.service.databaseService.EventService
 import lumetbackend.service.databaseService.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,7 +16,8 @@ import javax.servlet.http.HttpServletRequest
 @Service
 class UsersInteractionService (private val jwtProvider: JwtProvider,
                                private val arrayService: ArrayService,
-                               private val userService: UserService, ){
+                               private val userService: UserService,
+                               private val eventService: EventService){
 
 //    Blacklist
 
@@ -191,6 +193,58 @@ class UsersInteractionService (private val jwtProvider: JwtProvider,
         }
     }
 
+//    Events
+    fun applyForEvent(request: HttpServletRequest, eventId: Int): ResponseEntity<Any> {
+        val user = getUserByRequest(request)!!
+
+        val eventEntity = eventService.findById(eventId).get()
+
+        if (eventEntity.confirmedParticipants.contains(user.id)) return ResponseEntity(HttpStatus.valueOf("Already confirmed"))
+        else if (eventEntity.unconfirmedParticipants.contains(user.id)) return ResponseEntity(HttpStatus.valueOf("Already apply"))
+        else {
+
+            if (eventEntity.registrationSettings == "True") eventEntity.unconfirmedParticipants = arrayService.appendInt(eventEntity.unconfirmedParticipants, user.id!!)
+
+            else eventEntity.unconfirmedParticipants = arrayService.appendInt(eventEntity.confirmedParticipants, user.id!!)
+
+            user.userEvents!!.participationEvents = arrayService.appendInt(user.userEvents!!.participationEvents, eventId)
+
+            userService.save(user)
+            eventService.save(eventEntity)
+
+            return ResponseEntity(HttpStatus.OK)
+        }
+    }
+
+    fun removeApplyForEvent(request: HttpServletRequest, eventId: Int): ResponseEntity<Any> {
+        val user = getUserByRequest(request)!!
+
+        val eventEntity = eventService.findById(eventId).get()
+
+        user.userEvents!!.participationEvents = arrayService.removeInt(user.userEvents!!.participationEvents, eventId)
+        eventEntity.unconfirmedParticipants = arrayService.removeInt(eventEntity.confirmedParticipants, user.id!!)
+        eventEntity.unconfirmedParticipants = arrayService.removeInt(eventEntity.unconfirmedParticipants, user.id!!)
+
+        userService.save(user)
+        eventService.save(eventEntity)
+
+        return ResponseEntity(HttpStatus.OK)
+    }
+
+
+    fun confirmApplyForEvent(request: HttpServletRequest, eventId: Int, userId: Int): ResponseEntity<Any> {
+        val user = getUserByRequest(request)!!
+        val eventEntity = eventService.findById(eventId).get()
+        if (user.userEvents!!.createdEvents.contains(eventId)){
+            eventEntity.confirmedParticipants = arrayService.appendInt(eventEntity.confirmedParticipants, userId)
+            eventEntity.unconfirmedParticipants = arrayService.removeInt(eventEntity.unconfirmedParticipants, userId)
+
+            eventService.save(eventEntity)
+
+            return ResponseEntity(HttpStatus.OK)
+        }
+        else return ResponseEntity(HttpStatus.FORBIDDEN)
+    }
 
 
 
@@ -199,11 +253,6 @@ class UsersInteractionService (private val jwtProvider: JwtProvider,
         val token = if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) { bearer.substring(7) } else null
         return userService.findByEmail(jwtProvider.getEmailFromToken(token))
     }
-
-
-
-
-
 
 
 

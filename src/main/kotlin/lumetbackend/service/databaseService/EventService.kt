@@ -17,4 +17,6 @@ interface EventService {
     fun save(eventEntity: EventEntity)
 
     fun deleteById(id: Int)
+
+    fun findAll():List<EventEntity>
 }

@@ -66,5 +66,21 @@ class UsersInteractionController(private val usersInteractionService: UsersInter
     fun cancelFeedback(request: HttpServletRequest, @PathVariable @NotNull userId: Int): ResponseEntity<Any> {
         return usersInteractionService.cancelFeedback(request, userId)
     }
-    
+
+//    Events
+
+    @PostMapping("/apply_for_event/{eventId}")
+    fun applyForEvent(request: HttpServletRequest, @PathVariable @NotNull eventId: Int): ResponseEntity<Any> {
+        return usersInteractionService.applyForEvent(request, eventId)
+    }
+
+    @PostMapping("/remove_apply_for_event/{eventId}")
+    fun removeApplyForEvent(request: HttpServletRequest, @PathVariable @NotNull eventId: Int): ResponseEntity<Any> {
+        return usersInteractionService.removeApplyForEvent(request, eventId)
+    }
+
+    @PostMapping("/confirm_apply_for_event/{eventId}/{userId}")
+    fun confirmApplyForEvent(request: HttpServletRequest, @PathVariable @NotNull eventId: Int, @PathVariable @NotNull userId: Int): ResponseEntity<Any> {
+        return usersInteractionService.confirmApplyForEvent(request, eventId, userId)
+    }
 }
