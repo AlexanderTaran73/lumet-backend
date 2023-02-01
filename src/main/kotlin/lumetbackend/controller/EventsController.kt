@@ -35,6 +35,11 @@ class EventsController(private val eventChangesService: EventChangesService) {
         return eventChangesService.getAllEvents(request)
     }
 
+    @PostMapping("/get_All_events/sort_and_search/{search}/{min_age}/{rating}/{hobby}/{users_limit}")
+    fun getAllEventsSort(request: HttpServletRequest, @PathVariable @NotNull search:String, @PathVariable @NotNull min_age:Int, @PathVariable @NotNull rating:Int, @PathVariable @NotNull hobby:String, @PathVariable @NotNull users_limit:Int): ResponseEntity<Any>{
+        return eventChangesService.getAllEventsSort(request, search, min_age, rating, hobby,users_limit)
+    }
+
     @PostMapping("/get_events_list_by_id")
     fun getEventsById(request: HttpServletRequest, eventIdList: List<Int>): ResponseEntity<Any> {
         return eventChangesService.getEventsById(request, eventIdList)

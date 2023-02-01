@@ -120,6 +120,36 @@ class EventChangesService(private val jwtProvider: JwtProvider,
         return ResponseEntity(eventDTO, HttpStatus.OK)
     }
 
+    fun getAllEventsSort(request: HttpServletRequest, search: String, minAge: Int, rating: Int, hobby: String, usersLimit: Int): ResponseEntity<Any> {
+        val user = getUserByRequest(request)!!
+
+        val eventList = eventService.findAll()
+
+        val eventDTO = mutableListOf<EventDTO>()
+        for (i in eventList){
+            val e = eventToEventDTO(i)
+            if (i.participantsAnonymity == "True" && !i.confirmedParticipants.contains(user.id!!)) e.confirmedParticipants=null
+
+            if(i.privacyStatus == "True" && !i.confirmedParticipants.contains(user.id!!)){
+                e.longitude = null
+                e.latitude = null
+            }
+            eventDTO.add(e)
+        }
+
+        val sortedEventDTO = mutableListOf<EventDTO>()
+        for(i in eventDTO){
+            if(search=="EMPTY_SEARCH" || (i.name!!.contains(search, ignoreCase = true) || i.description!!.contains(search, ignoreCase = true))){
+                if (i.desiredage!! >=minAge && i.userrating!! >=rating && i.participantLimit!!>= usersLimit &&(hobby=="ALL" || i.hobbytype!!.contains(hobby, ignoreCase = true))) {
+                    sortedEventDTO.add(i)
+                }
+
+            }
+        }
+
+        return ResponseEntity(sortedEventDTO, HttpStatus.OK)
+    }
+
     fun getEventsById(request: HttpServletRequest, eventIdList: List<Int>): ResponseEntity<Any> {
         val user = getUserByRequest(request)!!
 
@@ -213,6 +243,8 @@ class EventChangesService(private val jwtProvider: JwtProvider,
 
         return ResponseEntity(HttpStatus.OK)
     }
+
+
 
 
 }

@@ -35,6 +35,11 @@ class UsersController(private val usersService: UsersService) {
         return usersService.getALLUsers(request)
     }
 
+    @GetMapping("/getALLUsers/sort_and_search/{search}/{min_age}/{rating}/{hobby}")
+    fun getALLUsersSort(request: HttpServletRequest, @PathVariable @NotNull search:String, @PathVariable @NotNull min_age:Int, @PathVariable @NotNull rating:Int, @PathVariable @NotNull hobby:String): ResponseEntity<Any>{
+        return usersService.getALLUsersSort(request, search, min_age, rating, hobby)
+    }
+
 
 //    НЕ имеет смысла? аналогично getUserListById
 

@@ -130,6 +130,48 @@ class UsersService(private val jwtProvider: JwtProvider,
         }else return ResponseEntity(HttpStatus.NOT_FOUND)
     }
 
+    fun getALLUsersSort(request: HttpServletRequest, search: String, minAge: Int, rating:Int, hobby: String): ResponseEntity<Any> {
+        val userEntity = getUserByRequest(request)
+        if(userEntity!=null) {
+            val userEntityList = userService.findAll()
+
+            val userDTO = mutableListOf<UserDTO>()
+            for (user in userEntityList) {
+                if (user.id!=userEntity.id) {
+                    if (user.accountStatusid!!.name == "ACTIVE") {
+                        if (!user.blacklist.contains(userEntity.id)) {
+                            if (user.privacystatusid!!.profile == "ALL") {
+                                userDTO.add(userToUserDTO(user))
+                            } else if (user.privacystatusid!!.profile == "FRIENDS") {
+                                if (user.friendsid!!.friendlist.contains(userEntity.id)) {
+                                    userDTO.add(userToUserDTO(user))
+                                }
+                                else{
+                                    userDTO.add(userToClosedUserDTO(user))
+                                }
+                            } else if (user.privacystatusid!!.profile == "NOBODY") {
+                                userDTO.add(userToClosedUserDTO(user))
+                            }
+                        }
+                    }
+                }else{
+                    if (user.accountStatusid!!.name == "ACTIVE"){
+                        userDTO.add(userToPrivateUserDTO(user))
+                    }
+                }
+            }
+
+            val sortedUserDto = mutableListOf<UserDTO>()
+            for(i in userDTO){
+                if (search=="EMPTY_SEARCH" || i.login!!.contains(search, ignoreCase = true)){
+                    if (i.age!! >=minAge && i.rating!! >=rating && (hobby=="ALL" || i.hobbytype!!.contains(hobby, ignoreCase = true))) {
+                        sortedUserDto.add(i)
+                    }
+                }
+            }
+            return ResponseEntity(sortedUserDto, HttpStatus.OK)
+        }else return ResponseEntity(HttpStatus.NOT_FOUND)
+    }
 
     //    НЕ имеет смысла? аналогично getUserListById
 
@@ -254,7 +296,7 @@ class UsersService(private val jwtProvider: JwtProvider,
                 userEntity.id,
                 userEntity.login,
                 null,
-                userEntity.age,
+                null,
                 userEntity.avatarimage,
                 null,
                 null,
@@ -292,4 +334,6 @@ class UsersService(private val jwtProvider: JwtProvider,
                 null)
         return blacklistUserDTO
     }
+
+
 }

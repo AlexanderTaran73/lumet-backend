@@ -14,7 +14,7 @@ class JwtProvider {
     @Value("$(jwt.secret)")
     private val jwtSecret: String? = null
     fun generateToken(login: String?): String {
-        val date = Date.from(LocalDate.now().plusDays(5).atStartOfDay(ZoneId.systemDefault()).toInstant())
+        val date = Date.from(LocalDate.now().plusDays(15).atStartOfDay(ZoneId.systemDefault()).toInstant())
         return Jwts.builder()
                 .setSubject(login)
                 .setExpiration(date)

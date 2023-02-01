@@ -29,6 +29,10 @@ dependencies {
 	implementation("javax.xml.bind:jaxb-api:2.3.0-b170201.1204")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
+	implementation("org.springframework.boot:spring-boot-starter-websocket")
+
+
+
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
