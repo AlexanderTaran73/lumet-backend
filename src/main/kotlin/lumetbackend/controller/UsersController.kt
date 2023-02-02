@@ -25,7 +25,7 @@ class UsersController(private val usersService: UsersService) {
         return usersService.getUserById(request, userId)
     }
 
-    @GetMapping("/getUserListById")
+    @PostMapping("/getUserListById")
     fun getUserListById(request: HttpServletRequest, @Valid @RequestBody userIdList: List<Int>): ResponseEntity<Any> {
         return usersService.getUserListById(request, userIdList)
     }

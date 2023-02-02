@@ -40,7 +40,7 @@ class EventsController(private val eventChangesService: EventChangesService) {
         return eventChangesService.getAllEventsSort(request, search, min_age, rating, hobby,users_limit)
     }
 
-    @GetMapping("/get_events_list_by_id")
+    @PostMapping("/get_events_list_by_id")
     fun getEventsById(request: HttpServletRequest, eventIdList: List<Int>): ResponseEntity<Any> {
         return eventChangesService.getEventsById(request, eventIdList)
     }

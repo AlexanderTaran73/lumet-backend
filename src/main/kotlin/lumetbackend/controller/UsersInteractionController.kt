@@ -83,4 +83,7 @@ class UsersInteractionController(private val usersInteractionService: UsersInter
     fun confirmApplyForEvent(request: HttpServletRequest, @PathVariable @NotNull eventId: Int, @PathVariable @NotNull userId: Int): ResponseEntity<Any> {
         return usersInteractionService.confirmApplyForEvent(request, eventId, userId)
     }
+
+
+
 }
