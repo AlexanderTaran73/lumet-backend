@@ -71,6 +71,7 @@ class RegistrationService(private val registrationDataService: RegistrationDataS
         val userPrivacystatus = UserPrivacystatus("ALL", "ALL", "ALL")
         userService.userPrivacystatusSave(userPrivacystatus)
         userEntity.privacystatusid = userPrivacystatusRepository.findById(userPrivacystatus.id!!).get()
+        userEntity.age = 18
 
         userService.firstsave(userEntity)
         registrationDataService.deleteByEmail(email)

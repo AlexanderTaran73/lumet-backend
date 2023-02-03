@@ -163,7 +163,7 @@ class UsersService(private val jwtProvider: JwtProvider,
 
             val sortedUserDto = mutableListOf<UserDTO>()
             for(i in userDTO){
-                if (search=="EMPTY_SEARCH" || i.login!!.contains(search, ignoreCase = true)){
+                if (search=="EMPTYSEARCH" || i.login!!.contains(search, ignoreCase = true)){
                     if (i.age!! >=minAge && i.rating!! >=rating && (hobby=="ALL" || i.hobbytype!!.contains(hobby, ignoreCase = true))) {
                         sortedUserDto.add(i)
                     }
